@@ -9,6 +9,8 @@ import './App.css'
 import ContactArea from './components/ContactArea'
 import WorksSection from './components/WorksSection'
 import Footer from './components/Footer'
+import People from './components/People'
+import MathematicalSciencesFoundation from './components/MathematicalSciencesFoundation'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,8 +24,9 @@ function App() {
      <SponsorsSection/>
      <WorksSection/>
      <ContactArea/>
+     <People/>
+     <MathematicalSciencesFoundation/>
      <Footer/>
-
     </>
   )
 }
