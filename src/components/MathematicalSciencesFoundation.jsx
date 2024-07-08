@@ -101,7 +101,7 @@ const MathematicalSciencesFoundation = () => {
               <div className="bg-white p-6 rounded-lg shadow-lg transition transform hover:scale-105 duration-300">
                 <img src="https://mathscifound.org/wp-content/uploads/2019/02/iconfinder_JD-04_2246801.png" alt="Online/Hybrid Programmes" className="w-16 h-16 mb-4" />
                 <h3 className="text-2xl font-bold mb-2">Online/Hybrid Programmes</h3>
-                <p className="text-lg leading-relaxed font-serif">
+                <div>
                   Under The Internet College, we offer courses delivered online and in hybrid mode under the following tracks:
                   <ul className="list-disc pl-5">
                     <li>Language and communication</li>
@@ -109,7 +109,7 @@ const MathematicalSciencesFoundation = () => {
                     <li>Technology</li>
                     <li>Humanities and creative disciplines</li>
                   </ul>
-                </p>
+                </div>
                 <button className="mt-4 text-green-500 hover:text-green-700 font-bold">Find Out More</button>
               </div>
             </div>
