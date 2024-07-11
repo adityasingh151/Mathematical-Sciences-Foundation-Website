@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BsPlusCircle, BsDashCircle } from 'react-icons/bs';
 import { txtdb, imgdb } from '../../databaseConfig/firebaseConfig';
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getDatabase, ref, push } from "firebase/database"; // Adjust import according to your database (Firestore or Realtime Database)
-
 
 const WorkshopForm = () => {
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
@@ -30,26 +29,17 @@ const WorkshopForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      // const storage = getStorage();
-      // const db = getDatabase();
-      
-      // Assuming `aboutImage` is the file you want to upload
-      const file = data.aboutImage[0]; // FileList is an array-like object, get the first file
+      const file = data.aboutImage[0];
       const storageReference = storageRef(imgdb, `workshops/${file.name}`);
       
-      // Upload the file to Firebase Storage
       await uploadBytes(storageReference, file);
-      
-      // Get the download URL
       const downloadURL = await getDownloadURL(storageReference);
       
-      // Prepare data to be saved in the database
       const workshopData = {
         ...data,
         aboutImage: downloadURL
       };
       
-      // Save the data in the database
       const workshopRef = ref(txtdb, 'workshops');
       await push(workshopRef, workshopData);
       
@@ -58,7 +48,6 @@ const WorkshopForm = () => {
       console.log('Error adding workshop data: ', error);
     }
   };
-  
 
   const toggleFields = (fieldArray) => {
     const currentFieldSet = new Set(fields);
@@ -90,8 +79,19 @@ const WorkshopForm = () => {
   };
 
   return (
-    <div className="flex">
-      <form onSubmit={handleSubmit(onSubmit)} className="p-6 bg-white shadow-lg rounded-lg flex-grow space-y-4">
+    <div className="flex flex-col sm:flex-row">
+                  <div className="flex flex-col space-y-2 p-6 sm:w-1/3">
+                    {Object.entries(sectionFields).map(([section, fieldArray]) => (
+                      <button
+                        key={section}
+                        onClick={() => toggleFields(fieldArray)}
+                        className={`text-sm py-2 px-4 rounded transition duration-300 flex items-center gap-2 ${fields.some(field => fieldArray.includes(field)) ? 'bg-red-500 hover:bg-red-700' : 'bg-blue-500 hover:bg-blue-700'} text-white`}
+                      >
+                        <BsPlusCircle /> {fields.some(field => fieldArray.includes(field)) ? 'Remove' : 'Add'} {section.replace(/([A-Z])/g, ' $1').replace("section", " Section")}
+                      </button>
+                    ))}
+                  </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="p-6 bg-white shadow-lg rounded-lg flex-grow space-y-4 w-full sm:w-2/3">
         <h2 className="text-2xl font-bold text-indigo-600">Workshop Details</h2>
         {fields.map(field => (
           <div key={field} className="relative">
@@ -134,17 +134,6 @@ const WorkshopForm = () => {
         </button>
       </form>
 
-      <div className="flex flex-col space-y-2 p-6">
-        {Object.entries(sectionFields).map(([section, fieldArray]) => (
-          <button
-            key={section}
-            onClick={() => toggleFields(fieldArray)}
-            className={`text-sm py-2 px-4 rounded transition duration-300 flex items-center gap-2 ${fields.some(field => fieldArray.includes(field)) ? 'bg-red-500 hover:bg-red-700' : 'bg-blue-500 hover:bg-blue-700'} text-white`}
-          >
-            <BsPlusCircle /> {fields.some(field => fieldArray.includes(field)) ? 'Remove' : 'Add'} {section.replace(/([A-Z])/g, ' $1').replace("section", " Section")}
-          </button>
-        ))}
-      </div>
     </div>
   );
 };
