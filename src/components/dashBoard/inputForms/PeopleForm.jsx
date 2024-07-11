@@ -92,10 +92,8 @@ const PeopleForm = () => {
   }
 
   return (
-                    isSaving ? (
-                      <Saving />
-                    ) : (
-                      <>
+    <>
+    {isSaving && <Saving /> }
     <div className="flex flex-col sm:flex-row">
                     <div className="flex flex-col space-y-2 p-3 lg:p-6 md:w-1/3">
                       {Object.entries(sectionFields).map(([section, fieldArray]) => (
@@ -158,7 +156,7 @@ const PeopleForm = () => {
 
 </div>
 </>
-        )
+        
   );
 };
 
