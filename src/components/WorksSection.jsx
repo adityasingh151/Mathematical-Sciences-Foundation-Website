@@ -57,7 +57,7 @@ function WorksSection() {
   };
 
   return (
-    <section id="work" className="bg-gray-100 pt-16 pb-16">
+    <section id="work" className="bg-gradient-to-r from-cyan-50 to-blue-100 pt-4 pb-7">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h5 className="text-indigo-600 uppercase font-semibold">Works</h5>

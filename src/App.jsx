@@ -8,9 +8,13 @@ import WorkshopForm from './components/dashBoard/inputForms/WorkshopForm'; // As
 import EventForm from './components/dashBoard/inputForms/EventForm';
 import DashboardCard from './components/DashboardCard';
 import CoursesForm from './components/dashBoard/inputForms/CoursesForm';
-import CoursesForm1 from './components/dashBoard/inputForms/CoursesForm1';
+import CourseForm1 from './components/dashBoard/inputForms/CourseForm1';
 import PeopleForm from './components/dashBoard/inputForms/PeopleForm';
 import "./index.css"
+import CourseForm2 from './components/dashBoard/inputForms/CourseForm2';
+import CoursePage2 from './components/coursesPage/CoursePage2';
+import CoursePage1 from './components/coursesPage/CoursePage1';
+import WorkshopPage from './components/WorkshopPage';
 
 
 
@@ -20,14 +24,9 @@ function App() {
        <NavBar />
       <Outlet />
       <Footer/> 
-      <NavBar />
-      <WorkshopForm />
-      {/* <EventPage /> */}
-      <DashboardCard/> 
-       <EventForm/> 
-      <CoursesForm/>
-      <CoursesForm1/>
-       <PeopleForm/>
+      
+      {/* <WorkshopPage /> */}
+    
     </>
   );
 }

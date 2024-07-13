@@ -176,9 +176,10 @@ const CoursesForm = () => {
   }
 
   return (
+    
+    <>
+    {isSaving && <Saving /> }
     <div className="flex flex-col items-center py-12 bg-gray-50">
-      {isSaving ? <Saving /> : (
-        <>
           {showSuccess && <SuccessNotification message="Item Created Successfully!" onClose={() => setShowSuccess(false)} />}
           {showError && <ErrorNotification message="Something went wrong!" onClose={() => setShowError(false)} />}
           <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-4xl p-6 bg-white shadow-lg rounded-lg space-y-6">
@@ -255,9 +256,10 @@ const CoursesForm = () => {
               </button>
             </div>
           </form>
+          </div>
         </>
-      )}
-    </div>
+      
+    
   );
 };
 

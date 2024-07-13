@@ -39,20 +39,23 @@ const MathematicalSciencesFoundation = () => {
 
   return (
     <div className="font-lato text-gray-900 bg-gradient-to-r from-cyan-50 to-blue-100">
-      <section ref={sectionRefs.first} data-animation="animate-fly-in" className="relative w-full h-96 bg-gray-800">
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center p-8">
-          <h2 className="text-blue-300 text-4xl font-bold mb-4 animate-bounce">
-            Mathematical Sciences Foundation
-          </h2>
-          <div className="mt-6 space-x-4">
-            <button className="text-white bg-blue-500 px-6 py-3 border-4 border-blue-500 rounded-sm font-bold transition duration-300 ease-in-out transform hover:bg-transparent hover:text-blue-500 hover:scale-105">
-              Button One
-            </button>
-            <button className="text-gray-800 bg-white px-6 py-3 border-4 border-white rounded-sm font-bold transition duration-300 ease-in-out transform hover:bg-gray-800 hover:text-white hover:scale-105">
-              Button Two
-            </button>
-          </div>
-        </div>
+      <section ref={sectionRefs.first} data-animation="animate-fly-in" className="relative w-full h-60 mt-0">
+      <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-4">
+        <div
+          className="absolute top-0 left-0 right-0 bottom-0 bg-repeat blur-sm"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='50' height='50' patternTransform='scale(3) rotate(50)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(22, 31%, 66%, 1)'/><path d='M0 0v50h50V0zm.88.88h23.24v23.24H.87zm25 0h23.24v23.24H25.87zm-25 25h23.24v23.24H.87zm25 0h23.24v23.24H25.87z'  stroke-width='9' stroke='none' fill='hsla(7,52.6%,30.6%,1)'/><path d='M0 0v9.31A9.3 9.3 0 0 0 9.31.01V0zm40.69 0a9.3 9.3 0 0 0 9.3 9.31V0zm-15.7 13.76a11.23 11.23 0 1 0 0 22.47 11.23 11.23 0 0 0 0-22.47zM0 40.69V50h9.31A9.3 9.3 0 0 0 0 40.7zm50 0a9.3 9.3 0 0 0-9.31 9.3V50h9.3z'  stroke-width='9' stroke='none' fill='hsla(6,56.8%,49%,1)'/><path d='M18.91 0a6.1 6.1 0 0 0 12.18 0zM0 18.9v12.2a6.1 6.1 0 0 0 0-12.2zm50 0a6.1 6.1 0 1 0 0 12.2zm-25 25a6.1 6.1 0 0 0-6.1 6.1h12.2a6.1 6.1 0 0 0-6.1-6.1z'  stroke-width='9' stroke='none' fill='hsla(174,20.8%,19.8%,1)'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>")`,
+          }}
+        ></div>
+        {/* Content with glowing effect */}
+        <h1 className="text-blue-50 text-5xl font-bold mb-4 animate-bounce">
+          Mathematical Sciences Foundation
+        </h1>
+        <p className="text-blue-100 text-md font-bold mb-4 animate-pulse italic">
+          A initiative by Prof. Dinesh Singh
+        </p>
+        
+      </div>
       </section>
 
       <section ref={sectionRefs.second} data-animation="animate-slide-in" className="py-20 bg-gradient-to-r from-cyan-50 to-blue-100">

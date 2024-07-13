@@ -2,7 +2,7 @@ import React from 'react';
 
 const AboutSection = () => {
   return (
-    <section id="why" className="pt-16 pb-16 relative w-full bg-gradient-to-r from-cyan-50 to-blue-100">
+    <section id="why" className="pt-4 pb-4 relative w-full bg-gradient-to-r from-cyan-50 to-blue-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h5 className="text-indigo-600 uppercase font-semibold">Our Mission</h5>

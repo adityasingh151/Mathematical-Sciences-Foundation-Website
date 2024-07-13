@@ -1,31 +1,45 @@
-import React from 'react'
-import AboutSection from './AboutSection';
+import React, { useState, useEffect } from 'react';
 import Carousel from './Carousel';
-import MathematicalSciencesFoundation from './MathematicalSciencesFoundation';
-import EventPage from './EventPage';
-import Hero from './Hero' ;
-import People from './People';
-import SponsersSection from './SponsorsSection';
-import WorkshopPage from './WorkshopPage';
+import AboutSection from './AboutSection';
+import SponsorsSection from './SponsorsSection'; // Fixed typo in the name
 import WorksSection from './WorksSection';
 import ContactArea from './ContactArea';
+import Loading from './LoadSaveAnimation/Loading';
+import CoursesPage1 from './coursesPage/CoursePage1';
+import CoursePage2 from './coursesPage/CoursePage2';
+import CoursePage1 from './coursesPage/CoursePage1';
+import CoursesPage from './coursesPage/CoursesPage'
 
 function Home() {
-    return (
-      <>
-        <AboutSection /> 
-        <Carousel />
-        {/* <EventPage/> */}
-        <Hero/>
-         <MathematicalSciencesFoundation/>
-        <People/>
-        <SponsersSection/>
-         <WorkshopPage/> 
-        <WorksSection/>
-        <ContactArea />
-        
-      </>
-    );
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a loading delay
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 100); // Adjust this duration as needed
+
+    // Cleanup function to clear the timeout
+    return () => clearTimeout(timer);
+  }, []); // Add dependencies array to prevent re-running on component updates
+
+  if (isLoading) {
+    return <Loading />;
   }
 
-export default Home
+  return (
+    <>
+      <Carousel />
+      <AboutSection />
+      <SponsorsSection />
+      <WorksSection />
+      <ContactArea />
+      {/* <CoursePage1/> */}
+      {/* <CoursePage2/> */}
+      {/* <CoursesPage1/> */}
+      {/* <CoursesPage /> */}
+    </>
+  );
+}
+
+export default Home;
