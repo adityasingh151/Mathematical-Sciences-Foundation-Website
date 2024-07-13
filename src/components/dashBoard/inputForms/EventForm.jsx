@@ -190,11 +190,9 @@ const EventForm = () => {
   }
 
   return (
+    <>
+      {isSaving && <Saving /> }
     <div className="flex flex-col sm:flex-row">
-      {isSaving ? (
-        <Saving />
-      ) : (
-        <>
           {showSuccess && (
             <SuccessNotification
               message="Event Created Successfully!"
@@ -280,9 +278,9 @@ const EventForm = () => {
               Submit Event Details
             </button>
           </form>
-        </>
-      )}
     </div>
+        </>
+      
   );
 };
 

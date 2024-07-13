@@ -1,7 +1,6 @@
-// Navbar.jsx
-import React, { useState } from 'react';
-import logo from '../assets/images/logo.svg';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import logo from "../assets/images/logo.svg";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,14 +9,70 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const navItems = [
+    {
+      name: "About ↓",
+      path: "/about/story",
+      dropdown: [
+        { name: "Our Team", path: "/about/team" },
+        { name: "Our Story", path: "/about/story" },
+      ],
+    },
+    {
+      name: "Initiatives ↓",
+      path: "/initiatives",
+      dropdown: [
+        { name: "Initiative 1", path: "/initiatives/1" },
+        { name: "Initiative 2", path: "/initiatives/2" },
+      ],
+    },
+    {
+      name: "Online Courses ↓",
+      path: "/courses",
+      dropdown: [
+        { name: "Courses for Students", path: "courses/students" },
+        { name: "Courses for Teachers", path: "courses/teachers" },
+      ],
+    },
+    {
+      name: "Workshops ↓",
+      path: "/workshop/geogebra",
+      dropdown: [
+        { name: "GeoGebra Workshop", path: "/workshop/geogebra" },
+        {
+          name: "Art Integrated Maths",
+          path: "/workshop/art-integrated-maths",
+        },
+        { name: "Communication Workshop", path: "/workshop/communication" },
+      ],
+    },
+    {
+      name: "Events ↓",
+      path: "/event/1",
+      dropdown: [
+        { name: "Recognising Ramanujan 2023", path: "/event/1" },
+        { name: "Inviting All Young Minds(IAYM)", path: "/event/2" },
+      ],
+    },
+    {
+      name: "Result ↓",
+      path: "/result",
+      dropdown: [
+        { name: "Recognising Ramanujan 2020 Result", path: "/result/2023" },
+        { name: "2022 Results", path: "/result/2022" },
+      ],
+    },
+    { name: "Latest", path: "/latest" },
+  ];
+
   return (
-    <nav className="bg-white shadow-md">
-      <div className="mx-auto px-6 py-3 lg:flex lg:items-center lg:justify-between">
+    <nav className="bg-white shadow-md relative z-50">
+      <div className="mx-auto px-3 py-1 md:flex md:items-center md:justify-between">
         <div className="flex items-center justify-between">
           <Link to="/">
-            <img src= '/msflogo.jpg' alt="Logo" className="h-14 w-14" />
+            <img src="/msflogo.jpg" alt="Logo" className="h-12 w-12" />
           </Link>
-          <div className="lg:hidden">
+          <div className="md:hidden">
             <button
               type="button"
               className="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600"
@@ -43,48 +98,51 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className={`lg:flex items-center ${isOpen ? 'block' : 'hidden'}`}>
-          <div className="flex flex-col lg:flex-row lg:mx-6">
-            <Link to="/" className="my-1 text-gray-700 hover:text-blue-500 lg:mx-4 lg:my-0">
-              Home
-            </Link>
-            <Link to="/about" className="my-1 text-gray-700 hover:text-blue-500 lg:mx-4 lg:my-0">
-              About
-            </Link>
-            <Link to="/carousel" className="my-1 text-gray-700 hover:text-blue-500 lg:mx-4 lg:my-0">
-              Carousel
-            </Link>
-            <Link to="/contact" className="my-1 text-gray-700 hover:text-blue-500 lg:mx-4 lg:my-0">
-              Contact
-            </Link>
-            <div className="relative">
-              <button className="my-1 text-gray-700 hover:text-blue-500 lg:mx-4 lg:my-0">
-                More
-              </button>
-              <div className="absolute hidden bg-white shadow-md rounded-md">
-                <Link to="/event" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  Event
-                </Link>
-                <Link to="/people" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  People
-                </Link>
-                <Link to="/sponsors" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  Sponsors
-                </Link>
-                <Link to="/workshop" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  Workshop
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-center lg:block">
-            <Link
-              to="/get-started"
-              className="block w-full px-4 py-2 mt-2 text-sm text-center text-white bg-blue-500 rounded-md hover:bg-blue-400 lg:mt-0 lg:w-auto"
-            >
-              Get Started
-            </Link>
+        <div className={`md:flex items-center ${isOpen ? "block" : "hidden"}`}>
+          <div className="flex flex-col md:flex-row md:mx-6 gap-1">
+            {navItems.map((item, index) =>
+              item.dropdown ? (
+                <div key={index} className="relative group">
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "w-fit mt-1 mb-0 text-center text-blue-500 md:mx-4 md:my-0"
+                        : "w-fit mt-1 mb-0 text-gray-700 text-center hover:text-blue-500 md:mx-4 md:my-0"
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                  <div className="w-fit absolute hidden group-hover:block bg-white shadow-md rounded-md mt-0 z-50">
+                    {item.dropdown.map((subItem, subIndex) => (
+                      <NavLink
+                        key={subIndex}
+                        to={subItem.path}
+                        className={({ isActive }) =>
+                          isActive
+                            ? "block px-4 py-2 text-blue-500 hover:bg-gray-200 text-center rounded-md"
+                            : "block px-4 py-2 text-gray-700 hover:bg-gray-200 text-center rounded-md"
+                        }
+                      >
+                        {subItem.name}
+                      </NavLink>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <NavLink
+                  key={index}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-blue-500 my-1 hover:text-blue-500 md:mx-4 md:my-0"
+                      : "my-1 text-gray-700 hover:text-blue-500 md:mx-4 md:my-0"
+                  }
+                >
+                  {item.name}
+                </NavLink>
+              )
+            )}
           </div>
         </div>
       </div>
