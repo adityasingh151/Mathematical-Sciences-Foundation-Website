@@ -1,7 +1,7 @@
-// firebaseConfig.js
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
+import { getAuth } from 'firebase/auth'; // Import Firebase Authentication
 
 const firebaseConfig = {
     apiKey: String(import.meta.env.VITE_FIREBASE_API_KEY),
@@ -17,6 +17,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const txtdb = getDatabase(app);
 const imgdb = getStorage(app);
+const auth = getAuth(app); // Initialize Firebase Authentication
 
-
-export { txtdb, imgdb };
+export { txtdb, imgdb, auth }; // Export the auth module for use in other parts of your application

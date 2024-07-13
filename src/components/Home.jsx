@@ -34,10 +34,10 @@ function Home() {
       <SponsorsSection />
       <WorksSection />
       <ContactArea />
-      {/* <CoursePage1/> */}
-      {/* <CoursePage2/> */}
-      {/* <CoursesPage1/> */}
-      {/* <CoursesPage /> */}
+       {/* <CoursePage1/> 
+      <CoursePage2/>
+      <CoursesPage1/>
+      <CoursesPage /> */}
     </>
   );
 }
