@@ -2,7 +2,7 @@ import React from 'react';
 
 const HeaderSection = React.forwardRef(({ title, subtitle, buttonText, onButtonClick }, ref) => {
   return (
-    <div className="relative w-full h-96 bg-cover bg-center" >
+    <div ref={ref} data-animation="animate-fly-in" className="relative w-full h-60 bg-cover bg-center" >
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-8">
         <div
           className="absolute top-0 left-0 right-0 bottom-0 bg-repeat blur-sm"

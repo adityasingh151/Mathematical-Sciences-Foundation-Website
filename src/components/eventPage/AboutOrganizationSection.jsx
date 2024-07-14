@@ -4,7 +4,7 @@ const AboutOrganizationSection = React.forwardRef(({ title, content }, ref) => {
   return (
     <section
       ref={ref}
-      data-animation="animate-slide-in-left"
+      data-animation="animate-slide-in"
       className="py-4 bg-gradient-to-r from-cyan-50 to-blue-100"
     >
       <div className="container mx-auto px-8">
