@@ -17,6 +17,12 @@ import CoursePage1 from './components/coursesPage/CoursePage1';
 import WorkshopPage from './components/WorkshopPage';
 import SideBar from './components/dashBoard/SideBar';
 import Dashboard from './components/dashBoard/InfoCard/Dashboard';
+import CarouselImageForm from './components/dashBoard/inputForms/CarouselImageForm';
+import CarouselView from './components/dashBoard/viewComponents/CarouselView';
+import PeopleView from './components/dashBoard/viewComponents/PeopleView';
+import ViewEvent from './components/dashBoard/viewComponents/ViewEvent';
+import ViewWorkshop from './components/dashBoard/viewComponents/ViewWorkshop';
+import ViewCourses from './components/dashBoard/viewComponents/ViewCourses';
 
 
 function App() {
@@ -26,7 +32,13 @@ function App() {
       <Outlet />
       <Footer/> 
       {/* <WorkshopPage /> */}
-      {/* <Dashboard/> */}  
+       {/* <CarouselView/> */}
+       {/* <PeopleView/> */}
+       {/* <ViewEvent/> */}
+       {/* <ViewWorkshop/> */}
+       <ViewCourses/>
+       {/* <CoursesForm/> */}
+       
     
     </>
   );

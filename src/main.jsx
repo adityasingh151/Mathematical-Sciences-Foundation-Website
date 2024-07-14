@@ -26,6 +26,8 @@ import EventForm from './components/dashBoard/inputForms/EventForm';
 import PeopleForm from './components/dashBoard/inputForms/PeopleForm';
 import WorkshopForm from './components/dashBoard/inputForms/WorkshopForm';
 import CourseSelection from './components/dashBoard/inputForms/CourseSelection';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import CarouselImageForm from './components/dashBoard/inputForms/CarouselImageForm';
 
 const router = createBrowserRouter([
   {
@@ -51,7 +53,7 @@ const router = createBrowserRouter([
       { path: 'event/1', element: <EventPage /> },
       //More event page in loop with id
       { path: 'admin/login', element: <AdminLogin /> },
-      { path: 'dashboard', element: <DashboardCard /> },
+      
       { path: 'course-selection', element: <CourseSelection /> },
       { path: 'forms/course1', element: <CourseForm1 /> },
       { path: 'forms/course2', element: <CourseForm2 /> },
@@ -59,6 +61,8 @@ const router = createBrowserRouter([
       { path: 'forms/event', element: <EventForm /> },
       { path: 'forms/people', element: <PeopleForm /> },
       { path: 'forms/workshop', element: <WorkshopForm /> },
+      { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
+      { path: 'forms/carousel', element: <CarouselImageForm /> },
       {
         path: 'admin',
         element: <ProtectedRoute />,
@@ -68,12 +72,14 @@ const router = createBrowserRouter([
             element: <AdminLayout />,
             children: [
               { path: 'dashboard', element: <DashboardCard /> },
+              { path: 'course-selection', element: <CourseSelection /> },
               { path: 'forms/course1', element: <CourseForm1 /> },
               { path: 'forms/course2', element: <CourseForm2 /> },
               { path: 'forms/courses', element: <CoursesForm /> },
               { path: 'forms/event', element: <EventForm /> },
               { path: 'forms/people', element: <PeopleForm /> },
               { path: 'forms/workshop', element: <WorkshopForm /> },
+              { path: 'forms/carousel', element: <CarouselImageForm /> },
               // Add more protected admin routes here
             ],
           },

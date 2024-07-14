@@ -28,7 +28,7 @@ function Footer() {
               <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500" aria-label="Works navigation">
                 <Link className="hover:opacity-75" to="/workshops">Workshops</Link>
                 <Link className="hover:opacity-75" to="/courses">Courses</Link>
-                <Link className="hover:opacity-75" to="/events">Events</Link>
+                <Link className="hover:opacity-75" to="/event/1">Events</Link>
               </nav>
             </div>
             <div>
@@ -41,7 +41,7 @@ function Footer() {
             <div>
               <p className="font-medium">Legal</p>
               <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500" aria-label="Legal navigation">
-                <Link className="hover:opacity-75" to="/privacy-policy">Privacy Policy</Link>
+                <Link className="hover:opacity-75" to="/PrivacyPolicy">Privacy Policy</Link>
               </nav>
             </div>
           </div>
