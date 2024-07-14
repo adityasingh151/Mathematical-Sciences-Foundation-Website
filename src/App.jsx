@@ -13,7 +13,7 @@ import PeopleForm from './components/dashBoard/inputForms/PeopleForm';
 import "./index.css"
 import CourseForm2 from './components/dashBoard/inputForms/CourseForm2';
 import CoursePage2 from './components/coursesPage/CoursePage2';
-import CoursePage1 from './components/coursesPage/CoursePage1';
+import CoursesPage1 from './components/coursesPage/CoursesPage1';
 import WorkshopPage from './components/WorkshopPage';
 import SideBar from './components/dashBoard/SideBar';
 import Dashboard from './components/dashBoard/InfoCard/Dashboard';

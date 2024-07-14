@@ -10,7 +10,7 @@ const RegistrationSection = React.forwardRef(({ title, details, buttonText, onBu
   return (
     <section
       ref={ref}
-      data-animation="animate-slide-in-bottom"
+      data-animation="animate-slide-in-top"
       className="py-4 px-3 bg-gradient-to-r from-blue-100 to-cyan-50"
     >
       <div className="container mx-auto">

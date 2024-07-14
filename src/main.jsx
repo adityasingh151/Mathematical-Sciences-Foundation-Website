@@ -10,7 +10,7 @@ import ContactArea from './components/ContactArea';
 import People from './components/People';
 import Hero from './components/Hero';
 import MathematicalSciencesFoundation from './components/MathematicalSciencesFoundation';
-import CoursePage1 from './components/coursesPage/CoursePage1';
+import CoursesPage1 from './components/coursesPage/CoursesPage1';
 import CoursePage2 from './components/coursesPage/CoursePage2';
 import CoursesPage from './components/coursesPage/CoursesPage';
 import WorkshopPage from './components/WorkshopPage';
@@ -41,12 +41,12 @@ const router = createBrowserRouter([
       { path: 'people', element: <People /> },
       { path: 'hero', element: <Hero /> },
       { path: 'msf', element: <MathematicalSciencesFoundation /> },
-      { path: 'courses', element: <CoursesPage /> },
+      { path: 'courses', element: <CoursePage2 /> },
       { path: 'about/team', element: <People /> },
       { path: 'about/story', element: <MathematicalSciencesFoundation /> },
-      { path: 'courses', element: <CoursesPage /> },
+      { path: 'courses', element: <CoursePage2 /> },
       { path: 'courses/students', element: <CoursePage2 /> },
-      { path: 'courses/teachers', element: <CoursePage1 /> },
+      { path: 'courses/teachers', element: <CoursesPage1 /> },
       //More Courses page in loop with id
       { path: 'workshop/GeoGebra', element: <WorkshopPage /> },
       //More workshop page in loop with id

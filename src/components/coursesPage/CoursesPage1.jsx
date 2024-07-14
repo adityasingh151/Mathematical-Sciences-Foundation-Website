@@ -1,6 +1,38 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
+import { getDatabase, ref, onValue } from "firebase/database";
 
 const CoursesPage1 = () => {
+  const [teacherCourses, setTeacherCourses] = useState([]);
+
+  useEffect(() => {
+    const db = getDatabase();
+    const coursesRef = ref(db, 'courses');
+
+    onValue(coursesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const fetchedCourses = [];
+        // Loop through each course and check if it has a "teachers" category
+        for (const courseId in data) {
+          const course = data[courseId];
+          if (course.teachers) { // Check if the course category is for teachers
+            fetchedCourses.push({
+              id: courseId,
+              ...course.teachers
+            });
+          }
+        }
+        setTeacherCourses(fetchedCourses);
+        console.log(teacherCourses)
+      } else {
+        console.log("No data available for teacher courses");
+      }
+    });
+
+    // return () => coursesRef.off();
+  }, []);
+
+
   return (
     <div className="flex flex-col">
       {/* Header Section */}
@@ -19,31 +51,24 @@ const CoursesPage1 = () => {
 
 
       {/* Courses Section */}
-      <section className="bg-white py-10">
+       <section className="bg-white py-10">
         <div className="max-w-7xl mx-auto px-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <CTA 
-              title="Enrich Your Maths Class With GeoGebra" 
-              content="For Middle Grade Teachers... 08 Webinars | Fee: 599 INR (Including GST)"
-              details={[
-                "Interactive webinars",
-                "Hands-on GeoGebra tutorials",
-                "Certificate of Completion"
-              ]}
-              duration="Course Duration: 4 Weeks"
-              action="Learn More"
-            />
-            <CTA 
-              title="Introduction to Useful Tools and Online Teaching Strategies" 
-              content="5 Webinars | Free"
-              details={[
-                "Effective online teaching strategies",
-                "Utilization of digital tools",
-                "Engage students in a virtual classroom"
-              ]}
-              duration="Course Duration: 3 Weeks"
-              action="Join Now"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+            {teacherCourses.length > 0 ? (
+              teacherCourses.map((course, index) => (
+                <CTA 
+                  key={course.id || index}
+                  title={course.title || "No Title Provided"}
+                  details={course.description || ["No details available"]}
+                  duration={`Course Duration: ${course.duration}`}
+                  fees={course.fees}
+                  action="Learn More"
+                  imgSrc={course.imgSrc}
+                />
+              ))
+            ) : (
+              <p className="col-span-full">No teacher courses available.</p>
+            )}
           </div>
         </div>
       </section>
@@ -75,17 +100,21 @@ const Blurb = ({ title, icon, content }) => (
   </div>
 );
 
-const CTA = ({ title, content, details, duration, action }) => (
-  <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-    <h3 className="text-2xl font-bold mb-2">{title}</h3>
-    <p>{content}</p>
-    <ul className="list-disc list-inside my-4">
-      {details.map((detail, index) => (
-        <li key={index}>{detail}</li>
-      ))}
-    </ul>
-    <p className="font-semibold">{duration}</p>
-    <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{action}</button>
+const CTA = ({ title, fees, details, duration, action, imgSrc }) => (
+  <div className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+    <div className="p-6">
+      <h3 className="text-2xl font-bold mb-2 text-center">{title}</h3>
+    <img src={imgSrc} alt="Course" className="w-full h-64 object-cover mt-5" />
+      <h3 className="mb-4 text-xl font-bold">Description: </h3>
+      <ul className="list-disc list-inside my-4">
+        {details.map((detail, index) => (
+          <li key={index}>{detail}</li>
+        ))}
+      </ul>
+      <p className="font-semibold">{duration}</p>
+      <p className="font-semibold">Rs. {fees}</p>
+      <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{action}</button>
+    </div>
   </div>
 );
 
