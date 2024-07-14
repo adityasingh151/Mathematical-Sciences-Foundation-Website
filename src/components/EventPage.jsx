@@ -9,6 +9,7 @@ import RewardsSection from './eventPage/RewardsSection';
 import AboutOrganizationSection from './eventPage/AboutOrganizationSection';
 import AdvisorySection from './eventPage/AdvisorySection';
 import RegistrationSection from './eventPage/RegistrationSection';
+import Loading from './LoadSaveAnimation/Loading';
 
 const EventPage = () => {
   const sectionRefs = {
@@ -28,43 +29,48 @@ const EventPage = () => {
   useEffect(() => {
     const db = getDatabase();
     const eventRef = ref(db, 'events'); // Adjust the path as per your database structure
-
+  
     onValue(eventRef, (snapshot) => {
       const data = snapshot.val();
       const firstEventKey = Object.keys(data)[0];
       const firstEventData = data[firstEventKey];
-      console.log(firstEventData)
+      console.log(firstEventData);
       setEventData(firstEventData);
     });
 
+  },[])
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            // Add animation class only once on first intersecting
             entry.target.classList.add(entry.target.dataset.animation);
+            // Stop observing the element so animation doesn't trigger again
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 } // Adjust threshold as needed
     );
-
+  
     Object.values(sectionRefs).forEach((ref) => {
       if (ref.current) {
         observer.observe(ref.current);
       }
     });
-
+  
+    // Clean up observer on component unmount
     return () => {
-      Object.values(sectionRefs).forEach((ref) => {
-        if (ref.current) {
-          observer.unobserve(ref.current);
-        }
-      });
+      observer.disconnect();
     };
-  }, []);
-
+  }, [eventData]); // Depend on eventData to ensure refs are updated with latest data
+  
+  
+  
   if (!eventData) {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
 
   const headerTitle = eventData.headerTitle;

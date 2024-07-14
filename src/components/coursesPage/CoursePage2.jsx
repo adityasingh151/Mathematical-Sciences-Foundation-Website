@@ -1,6 +1,40 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
+import { getDatabase, ref, onValue } from "firebase/database";
+import Loading from '../LoadSaveAnimation/Loading';
 
 const CoursePage2 = () => {
+  const [collegeCourses, setCollegeCourses] = useState([]);
+  const [loading, setloading] = useState(true)
+
+  useEffect(() => {
+    const db = getDatabase();
+    const coursesRef = ref(db, 'courses');
+
+    const unsubscribe = onValue(coursesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const fetchedCourses = [];
+        // Loop through each course and check if it has a "college" category
+        for (const courseId in data) {
+          const course = data[courseId];
+          if (course.college) { // Check if the course category is for college
+            fetchedCourses.push({
+              id: courseId,
+              ...course.college
+            });
+          }
+        }
+        setCollegeCourses(fetchedCourses);
+        console.log(collegeCourses)
+        setloading(false)
+      } else {
+        console.log("No data available for college courses");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const headerProps = {
     title: "Courses for College Students",
     description: "If you are currently studying in university or going to join the workforce, you are expected to have some skills of the 21st century - Data Driven Thinking and Digital Skills. These skills not only enhance your employment opportunities but also improve your academic or professional performance.",
@@ -66,10 +100,12 @@ const CoursePage2 = () => {
     buttonText: "Register Now"
   };
 
+  if(loading) return <Loading/>
+
   return (
-    <div className="font-sans bg-gray-50">
+    <div className="font-sans bg-gradient-to-r from-gray-50 to-cyan-100 rounded-md shadow-md">
       <Header {...headerProps} />
-      <CourseDetails {...courseDetailsProps} />
+      <CourseDetails courses={collegeCourses} />
       <Objectives {...objectivesProps} />
       <Footer {...footerProps} />
     </div>
@@ -78,7 +114,7 @@ const CoursePage2 = () => {
 
 const Header = ({ title, description, backgroundImage, blurbs, buttonText }) => {
   return (
-    <section className="bg-no-repeat bg-top-right bg-cover py-16" style={{ backgroundImage }}>
+    <section className="bg-no-repeat bg-top-right bg-cover py-4" style={{ backgroundImage }}>
       <div className="max-w-6xl mx-auto flex flex-wrap items-center">
         <div className="w-full lg:w-1/2 px-4">
           <h1 className="font-serif text-5xl lg:text-6xl leading-tight mb-6 text-gray-800">{title}</h1>
@@ -113,19 +149,20 @@ const Button = ({ text }) => {
   );
 };
 
-const CourseDetails = ({ courses, buttonText }) => {
+const CourseDetails = ({ courses }) => {
   return (
-    <section className="py-20 bg-gray-100">
+    <section className="py-4">
       <div className="max-w-6xl mx-auto flex flex-wrap">
-        {courses.map((course, index) => (
-          <div key={index} className="w-full lg:w-1/2 px-4 mb-8 lg:mb-0">
-            <CallToAction title={course.title} buttonText={course.buttonText} />
-            <CourseDescription {...course.description} />
-          </div>
-        ))}
-      </div>
-      <div className="text-center mt-12">
-        <Button text={buttonText} />
+        {courses.length > 0 ? (
+          courses.map((course, index) => (
+            <div key={course.id || index} className="w-full lg:w-1/2 px-4 mb-8 lg:mb-0 shadow-2xl rounded-lg ">
+              <CallToAction title={course.title || "No Title Provided"} buttonText="Click Here" />
+              <CourseDescription bulletPoints={course.description} fees={course.fees} imgSrc={course.imgSrc} />
+            </div>
+          ))
+        ) : (
+          <p>No courses available at the moment.</p>
+        )}
       </div>
     </section>
   );
@@ -133,33 +170,31 @@ const CourseDetails = ({ courses, buttonText }) => {
 
 const CallToAction = ({ title, buttonText }) => {
   return (
-    <div className="bg-teal-600 text-white text-center p-8 rounded-lg mb-6 shadow-lg hover:bg-teal-700 transition duration-300">
+    <div className="bg-teal-600 text-white text-center p-8 rounded-t-lg shadow-lg hover:bg-teal-700 transition duration-300">
       <h3 className="text-xl font-semibold mb-4">{title}</h3>
       <button className="bg-white hover:bg-gray-200 text-teal-600 rounded-full py-3 px-8 text-lg font-semibold tracking-wide transition duration-300">{buttonText}</button>
     </div>
   );
 };
 
-const CourseDescription = ({ fee, details, bulletPoints, audience }) => {
+const CourseDescription = ({ fees, bulletPoints, imgSrc }) => {
   return (
-    <div>
-      <p className="font-bold text-lg mb-4">{fee}</p>
-      <p className="text-base mb-4 text-gray-700">{details}</p>
-      <ul className="list-none mb-4 space-y-2">
+    <div className=''>
+      <img src={imgSrc || "https://via.placeholder.com/400"} alt="Course" className="w-full h-64 object-cover mb-4 rounded-b-lg" />
+        <p className="w-fit font-bold text-xl mb-1 px-4 py-2 bg-teal-400 cursor-default rounded-full hover:bg-teal-600 shadow-md">Fees: <span className='text-xl font-normal'>Rs. {fees}</span></p>
+      <ul className="list-disc list-inside space-y-2 mb-4">
         {bulletPoints.map((point, index) => (
-          <li key={index} className="font-bold text-gray-800">{point}</li>
+          <li key={index} className="text-gray-800">{point}</li>
         ))}
       </ul>
-      <h4 className="text-xl font-semibold mb-2 text-gray-800">Who Should Attend</h4>
-      <p className="text-base text-gray-700">{audience}</p>
     </div>
   );
 };
 
 const Objectives = ({ objectives }) => {
   return (
-    <section className="bg-teal-600 py-20">
-      <div className="bg-white rounded-lg shadow-xl max-w-6xl mx-auto flex flex-wrap">
+    <section className="bg-teal-600 py-4">
+      <div className="bg-white rounded-t-lg shadow-xl max-w-6xl mx-auto flex flex-wrap">
         {objectives.map((objective, index) => (
           <Objective key={index} {...objective} />
         ))}
@@ -179,7 +214,7 @@ const Objective = ({ title, imgSrc }) => {
 
 const Footer = ({ title, buttonText }) => {
   return (
-    <section className="bg-teal-700 text-white text-center py-16">
+    <section className="bg-teal-700 text-white text-center py-4">
       <h2 className="text-2xl font-semibold mb-4">{title}</h2>
       <Button text={buttonText} />
     </section>
