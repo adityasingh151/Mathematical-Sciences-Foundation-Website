@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Loading from './LoadSaveAnimation/Loading';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -36,7 +37,7 @@ const Carousel = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
 
   if (error) {
@@ -66,15 +67,12 @@ const Carousel = () => {
               className="relative h-full w-full"
               style={{
                 backgroundImage: `url(${image})`,
-                backgroundSize: 'contain', // Ensures full image is visible
+                backgroundSize: 'cover', // Ensures full image is visible
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center' // Centers the image in the slide
               }}
             >
               <div className="absolute inset-0 bg-black opacity-25"></div> 
-              <div className="absolute inset-0 flex items-center justify-center text-white text-2xl font-bold">
-                Slide {index + 1}
-              </div>
             </div>
           </SwiperSlide>
         ))}

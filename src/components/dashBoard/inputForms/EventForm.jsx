@@ -3,13 +3,17 @@ import { useForm } from 'react-hook-form';
 import { BsPlusCircle } from 'react-icons/bs';
 import { txtdb, imgdb } from '../../databaseConfig/firebaseConfig';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { ref, push } from 'firebase/database';
+import { ref, push, update } from 'firebase/database';
 import Loading from '../../LoadSaveAnimation/Loading';
 import Saving from '../../LoadSaveAnimation/Saving';
 import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
+import { useParams } from 'react-router-dom';
+import { getDatabase, get } from 'firebase/database';
+
 
 const EventForm = () => {
+  
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
   const [fields, setFields] = useState([
     'headerTitle',
@@ -17,6 +21,8 @@ const EventForm = () => {
     'aboutDescription',
     'aboutImage'
   ]);
+  const [initialData, setInitialData] = useState(null);
+  const { eventId } = useParams(); 
 
   const aboutImage = watch('aboutImage');
   const sponsorImage1 = watch('sponsorImage1');
@@ -32,36 +38,43 @@ const EventForm = () => {
   const [openedSections, setOpenedSections] = useState({
     registrationSection: false
   });
+  
 
   useEffect(() => {
-    if (aboutImage && aboutImage.length > 0) {
-      const fileReader = new FileReader();
-      fileReader.onload = (e) => setImagePreview(e.target.result);
-      fileReader.readAsDataURL(aboutImage[0]);
-    } else {
-      setImagePreview(null);
+    if (eventId) {
+      console.log("Fetching event data for ID:", eventId);
+      const db = getDatabase();
+      get(ref(db, `events/${eventId}`)).then(snapshot => {
+        console.log("Snapshot data:", snapshot.val()); // Log the fetched data
+        if (snapshot.exists()) {
+          setInitialData(snapshot.val());
+          Object.keys(snapshot.val()).forEach(field => {
+            console.log("Setting field:", field, snapshot.val()[field]); // Log each field being set
+            setValue(field, snapshot.val()[field]);
+          });
+        } else {
+          console.log("No data exists for this event ID:", eventId);
+        }
+      }).catch(error => {
+        console.error("Error fetching event data:", error);
+      });
     }
-  }, [aboutImage]);
+}, [eventId, setValue]);
 
-  useEffect(() => {
-    if (sponsorImage1 && sponsorImage1.length > 0) {
-      const fileReader = new FileReader();
-      fileReader.onload = (e) => setSponsorImage1Preview(e.target.result);
-      fileReader.readAsDataURL(sponsorImage1[0]);
-    } else {
-      setSponsorImage1Preview(null);
-    }
-  }, [sponsorImage1]);
 
-  useEffect(() => {
-    if (sponsorImage2 && sponsorImage2.length > 0) {
-      const fileReader = new FileReader();
-      fileReader.onload = (e) => setSponsorImage2Preview(e.target.result);
-      fileReader.readAsDataURL(sponsorImage2[0]);
-    } else {
-      setSponsorImage2Preview(null);
-    }
-  }, [sponsorImage2]);
+useEffect(() => {
+  setImagePreview(aboutImage);
+}, [aboutImage]);
+
+useEffect(() => {
+  setSponsorImage1Preview(sponsorImage1);
+}, [sponsorImage1]);
+
+useEffect(() => {
+  setSponsorImage2Preview(sponsorImage2);
+}, [sponsorImage2]);
+
+
 
   useEffect(() => {
     // Simulate a delay to demonstrate the loading state
@@ -79,47 +92,53 @@ const EventForm = () => {
     return downloadURL;
   };
 
-  const onSubmit = async (data) => {
-    setIsSaving(true);
-    try {
-      const aboutImageURL = await uploadImage(
-        data.aboutImage[0],
-        `events/${data.aboutImage[0].name}`
-      );
-
-      const sponsorImage1URL = data.sponsorImage1?.[0]
-        ? await uploadImage(
-            data.sponsorImage1[0],
-            `sponsors/${data.sponsorImage1[0].name}`
-          )
-        : null;
-
-      const sponsorImage2URL = data.sponsorImage2?.[0]
-        ? await uploadImage(
-            data.sponsorImage2[0],
-            `sponsors/${data.sponsorImage2[0].name}`
-          )
-        : null;
-
-      const eventData = {
-        ...data,
-        aboutImage: aboutImageURL,
-        sponsorImage1: sponsorImage1URL,
-        sponsorImage2: sponsorImage2URL,
-      };
-
-      const eventRef = ref(txtdb, 'events');
-      await push(eventRef, eventData);
-
-      console.log('Event data submitted successfully!', eventData);
-      setShowSuccess(true); // Show success notification
-    } catch (error) {
-      console.log('Error adding event data: ', error);
-      setShowError(true); // Show error notification
-    } finally {
-      setIsSaving(false);
+ // Improved upload handling with error checks and parallel uploads
+ const onSubmit = async (data) => {
+  setIsSaving(true);
+  try {
+    // Parallelize image uploads if new images are uploaded
+    const uploadPromises = [];
+    if (data.aboutImage?.[0] instanceof File) {
+      uploadPromises.push(uploadImage(data.aboutImage[0], `events/${data.aboutImage[0].name}`));
     }
-  };
+    if (data.sponsorImage1?.[0] instanceof File) {
+      uploadPromises.push(uploadImage(data.sponsorImage1[0], `sponsors/${data.sponsorImage1[0].name}`));
+    }
+    if (data.sponsorImage2?.[0] instanceof File) {
+      uploadPromises.push(uploadImage(data.sponsorImage2[0], `sponsors/${data.sponsorImage2[0].name}`));
+    }
+
+    const urls = await Promise.all(uploadPromises);
+    const [aboutImageURL, sponsorImage1URL, sponsorImage2URL] = urls;
+
+    const eventData = {
+      ...data,
+      aboutImage: aboutImageURL || data.aboutImage,
+      sponsorImage1: sponsorImage1URL || data.sponsorImage1,
+      sponsorImage2: sponsorImage2URL || data.sponsorImage2,
+    };
+
+    const dbRef = ref(txtdb, 'events');
+    if (eventId) {
+      // Update existing event
+      const eventUpdateRef = ref(txtdb, `events/${eventId}`);
+      await update(eventUpdateRef, eventData);
+    } else {
+      // Create new event
+      const eventsRef = ref(txtdb, 'events');
+      await push(eventsRef, eventData);
+    }
+    
+    setShowSuccess(true); // Show success notification
+  } catch (error) {
+    console.error('Error adding/updating event data: ', error);
+    setShowError(true); // Show error notification
+  } finally {
+    setIsSaving(false);
+  }
+};
+
+
 
   const toggleFields = (fieldArray, section) => {
     const currentFieldSet = new Set(fields);

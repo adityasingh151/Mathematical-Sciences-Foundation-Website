@@ -18,11 +18,12 @@ import WorkshopPage from './components/WorkshopPage';
 import SideBar from './components/dashBoard/SideBar';
 import Dashboard from './components/dashBoard/InfoCard/Dashboard';
 import CarouselImageForm from './components/dashBoard/inputForms/CarouselImageForm';
-import CarouselView from './components/dashBoard/viewComponents/CarouselView';
-import PeopleView from './components/dashBoard/viewComponents/PeopleView';
+import CarouselView from './components/dashBoard/viewComponents/ViewCarousel';
+import PeopleView from './components/dashBoard/viewComponents/ViewPeople';
 import ViewEvent from './components/dashBoard/viewComponents/ViewEvent';
-import ViewWorkshop from './components/dashBoard/viewComponents/ViewWorkshop';
+import ViewWorkshop from './components/dashBoard/viewComponents/ViewWorkshops';
 import ViewCourses from './components/dashBoard/viewComponents/ViewCourses';
+import ControlBar from './components/ControlBar';
 
 
 function App() {
@@ -36,9 +37,9 @@ function App() {
        {/* <PeopleView/> */}
        {/* <ViewEvent/> */}
        {/* <ViewWorkshop/> */}
-       <ViewCourses/>
+       {/* <ViewCourses/> */}
        {/* <CoursesForm/> */}
-       
+     
     
     </>
   );

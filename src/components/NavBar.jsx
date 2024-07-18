@@ -1,12 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [workshops, setWorkshops] = useState([]);
+  const [events, setEvents] = useState([]);
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    const db = getDatabase();
+    const workshopRef = ref(db, 'workshops');
+
+    onValue(workshopRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const workshopList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+        setWorkshops(workshopList);
+      } else {
+        console.log("No data available");
+      }
+    });
+  }, []);
+
+  //For events
+  useEffect(() => {
+    const db = getDatabase();
+    const eventsRef = ref(db, 'events');
+
+    onValue(eventsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const eventList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+        setEvents(eventList);
+      } else {
+        console.log("No data available");
+      }
+    });
+  }, []);
+
 
   const navItems = [
     {
@@ -35,23 +70,19 @@ const Navbar = () => {
     },
     {
       name: "Workshops ↓",
-      path: "/workshop/geogebra",
-      dropdown: [
-        { name: "GeoGebra Workshop", path: "/workshop/geogebra" },
-        {
-          name: "Art Integrated Maths",
-          path: "/workshop/art-integrated-maths",
-        },
-        { name: "Communication Workshop", path: "/workshop/communication" },
-      ],
+      path: `/workshop/${workshops[0]?.id}`,
+      dropdown: workshops.map(workshop => ({
+        name: workshop.headerTitle,
+        path: `/workshop/${workshop.id}`
+      })),
     },
     {
       name: "Events ↓",
-      path: "/event/1",
-      dropdown: [
-        { name: "Recognising Ramanujan 2023", path: "/event/1" },
-        { name: "Inviting All Young Minds(IAYM)", path: "/event/2" },
-      ],
+      path: `/event/${events[0]?.id}`,
+      dropdown: events.map(event => ({
+        name: event.headerTitle,
+        path: `/event/${event.id}`
+      })),
     },
     {
       name: "Result ↓",

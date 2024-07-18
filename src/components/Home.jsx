@@ -9,6 +9,9 @@ import CoursesPage1 from './coursesPage/CoursesPage1';
 import CoursePage2 from './coursesPage/CoursePage2';
 // import CoursesPage1 from './coursesPage/CoursesPage1';
 import CoursesPage from './coursesPage/CoursesPage'
+import SponsorsImageForm from './dashBoard/inputForms/SponsorsImageForm';
+import ReviewForm from './dashBoard/inputForms/ReviewForn';
+import ReviewsDisplay from './ReviewsDisplay';
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,10 +37,9 @@ function Home() {
       <SponsorsSection />
       <WorksSection />
       <ContactArea />
-       {/* <CoursePage1/> 
-      <CoursePage2/>
-      <CoursesPage1/>
-      <CoursesPage /> */}
+   {/* <SponsorsImageForm/> */}
+   <ReviewForm/>
+   <ReviewsDisplay/>
     </>
   );
 }

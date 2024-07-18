@@ -1,24 +1,22 @@
-// src/components/dashBoard/Sidebar.jsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { AiOutlineDashboard, AiOutlineForm, AiOutlineSetting, AiOutlineUser, AiOutlinePieChart } from 'react-icons/ai';
+import { AiOutlineDashboard, AiOutlineForm, AiOutlineSetting, AiOutlineUser, AiOutlinePieChart, AiOutlineBarChart } from 'react-icons/ai';
 
 const Sidebar = () => {
     return (
-        <div className="w-64 h-full bg-gray-800 text-white z-10"> 
+        <div className="w-64 min-h-screen bg-gray-900 text-gray-300 shadow-lg flex flex-col">
             <div className="flex items-center justify-center mt-8">
-                <span className="text-2xl font-semibold">Admin Dashboard</span>
+                <span className="text-3xl font-bold text-white">Admin Dashboard</span>
             </div>
-            <nav className="mt-10">
-                <NavLink to="/admin/dashboard" className={({ isActive }) => isActive ? "active-link" : "inactive-link"}>
-                    <AiOutlineDashboard className="w-5 h-5" />
-                    <span>Dashboard</span>
+            <nav className="mt-10 flex flex-col space-y-2 px-4">
+                <NavLink 
+                    to="/admin/dashboard" 
+                    className={({ isActive }) => isActive ? "bg-gray-700 text-white flex items-center p-4 rounded-lg transition duration-300" : "flex items-center p-4 rounded-lg transition duration-300 hover:bg-gray-700 hover:text-white"}
+                >
+                    <AiOutlineDashboard className="w-6 h-6 mr-4" />
+                    <span className="text-lg">Dashboard</span>
                 </NavLink>
-                <NavLink to="/admin/forms/course1" className={({ isActive }) => isActive ? "active-link" : "inactive-link"}>
-                    <AiOutlineForm className="w-5 h-5" />
-                    <span>Forms</span>
-                </NavLink>
-                {/* Add more links as necessary */}
+               
             </nav>
         </div>
     );

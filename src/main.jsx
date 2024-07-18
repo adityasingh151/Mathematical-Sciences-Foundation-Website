@@ -1,4 +1,3 @@
-// src/main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -28,6 +27,12 @@ import WorkshopForm from './components/dashBoard/inputForms/WorkshopForm';
 import CourseSelection from './components/dashBoard/inputForms/CourseSelection';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import CarouselImageForm from './components/dashBoard/inputForms/CarouselImageForm';
+import ViewCourses from './components/dashBoard/viewComponents/ViewCourses';
+import ViewEvent from './components/dashBoard/viewComponents/ViewEvent';
+import ViewPeople from './components/dashBoard/viewComponents/ViewPeople';
+import ViewCarousel from './components/dashBoard/viewComponents/ViewCarousel';
+import ViewWorkshops from './components/dashBoard/viewComponents/ViewWorkshops';
+import ViewCoursePage1 from './components/dashBoard/viewComponents/ViewCoursePage1';
 
 const router = createBrowserRouter([
   {
@@ -41,26 +46,27 @@ const router = createBrowserRouter([
       { path: 'people', element: <People /> },
       { path: 'hero', element: <Hero /> },
       { path: 'msf', element: <MathematicalSciencesFoundation /> },
-      { path: 'courses', element: <CoursePage2 /> },
+      { path: 'courses', element: <CoursesPage /> },
+      { path: 'forms/courses/edit/:courseId/:category',element: <CoursesForm />},
       { path: 'about/team', element: <People /> },
       { path: 'about/story', element: <MathematicalSciencesFoundation /> },
-      { path: 'courses', element: <CoursePage2 /> },
       { path: 'courses/students', element: <CoursePage2 /> },
       { path: 'courses/teachers', element: <CoursesPage1 /> },
-      //More Courses page in loop with id
+      { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
       { path: 'workshop/GeoGebra', element: <WorkshopPage /> },
-      //More workshop page in loop with id
       { path: 'event/1', element: <EventPage /> },
-      //More event page in loop with id
       { path: 'admin/login', element: <AdminLogin /> },
-      
+
       { path: 'course-selection', element: <CourseSelection /> },
       { path: 'forms/course1', element: <CourseForm1 /> },
       { path: 'forms/course2', element: <CourseForm2 /> },
       { path: 'forms/courses', element: <CoursesForm /> },
       { path: 'forms/event', element: <EventForm /> },
+      { path: 'forms/event/edit/:eventId', element: <EventForm /> },
       { path: 'forms/people', element: <PeopleForm /> },
       { path: 'forms/workshop', element: <WorkshopForm /> },
+      { path: 'view/courses', element: <ViewCourses /> },
+      { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
       { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
       { path: 'forms/carousel', element: <CarouselImageForm /> },
       {
@@ -77,9 +83,19 @@ const router = createBrowserRouter([
               { path: 'forms/course2', element: <CourseForm2 /> },
               { path: 'forms/courses', element: <CoursesForm /> },
               { path: 'forms/event', element: <EventForm /> },
+              { path: 'forms/event/edit/:eventId', element: <EventForm /> },
               { path: 'forms/people', element: <PeopleForm /> },
+              { path: 'forms/people/edit/:personId', element: <PeopleForm /> },
+              { path: 'view/people', element: <ViewPeople /> },
               { path: 'forms/workshop', element: <WorkshopForm /> },
               { path: 'forms/carousel', element: <CarouselImageForm /> },
+              { path: 'view/courses', element: <ViewCourses /> },
+              { path: 'forms/courses/edit/:courseId/:category',element: <CoursesForm />},
+              { path: 'view/events', element: <ViewEvent /> },
+              { path: 'view/workshops', element: <ViewWorkshops /> },
+              { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
+              { path: 'view/carousel', element: <ViewCarousel /> },
+              { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
               // Add more protected admin routes here
             ],
           },

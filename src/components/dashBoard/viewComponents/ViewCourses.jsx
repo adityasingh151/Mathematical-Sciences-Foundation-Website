@@ -1,97 +1,115 @@
-import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue, remove } from "firebase/database";
-import Modal from '../../Modal'; // Assuming Modal component as defined previously
-import Notification from '../../Notification'; // Assuming Notification component as defined previously
+import { BsPencilSquare, BsTrash } from 'react-icons/bs';
+import Modal from '../../Modal';  // Ensure the path is correct
+import Notification from '../../Notification';  // Ensure the path is correct
 
 const ViewCourses = () => {
   const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentCourse, setCurrentCourse] = useState(null);
+  const [notification, setNotification] = useState({ message: '', type: '' });
+  const navigate = useNavigate();  // Add this line
 
   useEffect(() => {
-    const db = getDatabase();
-    const coursesRef = ref(db, 'courses');
-
-    onValue(coursesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const loadedCourses = Object.keys(data).map(key => ({
-          id: key,
-          ...data[key]
-        }));
-        setCourses(loadedCourses);
+    const dbRef = ref(getDatabase(), 'courses');
+    const unsubscribe = onValue(dbRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const courseList = [];
+        snapshot.forEach((courseSnapshot) => {
+          const courseId = courseSnapshot.key;
+          const categories = courseSnapshot.val();
+          Object.keys(categories).forEach((category) => {
+            courseList.push({
+              id: courseId,
+              category: category,
+              ...categories[category]
+            });
+          });
+        });
+        setCourses(courseList);
       } else {
-        setNotification({ show: true, message: 'No courses found', type: 'error' });
+        setCourses([]);
       }
-      setIsLoading(false);
+      setLoading(false);
     }, (error) => {
-      console.error('Error fetching courses:', error);
-      setNotification({ show: true, message: 'Failed to load courses', type: 'error' });
-      setIsLoading(false);
+      setError('Failed to fetch data');
+      setLoading(false);
     });
 
-    return () => {};
+    return () => unsubscribe();
   }, []);
 
-  const handleDelete = async () => {
-    const db = getDatabase();
-    try {
-      await remove(ref(db, `courses/${selectedCourse.id}`));
-      setCourses(courses.filter(course => course.id !== selectedCourse.id));
-      setNotification({ show: true, message: 'Course deleted successfully!', type: 'success' });
-    } catch (error) {
-      console.error('Error deleting course:', error);
-      setNotification({ show: true, message: 'Failed to delete course', type: 'error' });
-    }
-    setShowModal(false);
+  const handleDelete = (course) => {
+    setCurrentCourse({...course, action: 'delete'});
+    setModalOpen(true);
   };
 
-  const promptDelete = (course) => {
-    setSelectedCourse(course);
-    setShowModal(true);
+  const confirmDelete = () => {
+    if (!currentCourse) return;
+    const dbRef = ref(getDatabase(), `courses/${currentCourse.id}/${currentCourse.category}`);
+    remove(dbRef)
+      .then(() => {
+        setNotification({ message: 'Course deleted successfully.', type: 'success' });
+        setModalOpen(false);
+      })
+      .catch(() => setNotification({ message: 'Failed to delete course.', type: 'error' }));
   };
 
   const handleEdit = (course) => {
-    window.location.href = `/edit-course/${course.id}`; // Ensure this route is correctly set up
+    navigate(`/forms/courses/edit/${course.id}/${course.category}`);  // Update this line
   };
 
-  if (isLoading) return <div>Loading courses...</div>;
+  const closeNotification = () => {
+    setNotification({ message: '', type: '' });
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-xl font-bold mb-4">Courses</h1>
-      {courses.map(course => (
-        <div key={course.id} className="p-4 border rounded mb-2 flex justify-between items-center">
-          <div>
-            <h2 className="font-semibold">{course.title}</h2>
-            <p>{course.description}</p>
+    <div className="max-w-6xl mx-auto py-6">
+      <h1 className="text-3xl font-semibold text-center mb-6">Manage Courses</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {courses.map((course) => (
+          <div key={`${course.id}-${course.category}`} className="bg-white shadow rounded overflow-hidden">
+            <img src={course.imgSrc} alt={course.title} className="w-full h-48 object-cover"/>
+            <div className="p-4">
+              <h3 className="font-bold text-lg">{course.title} ({course.category})</h3>
+              <p className="text-gray-600 text-sm mb-4">{course.description}</p>
+              <div className="flex justify-between items-center">
+                <button onClick={() => handleEdit(course)} className="text-blue-500 hover:text-blue-700 flex items-center">
+                  <BsPencilSquare className="mr-2"/>Edit
+                </button>
+                <button onClick={() => handleDelete(course)} className="text-red-500 hover:text-red-700 flex items-center">
+                  <BsTrash className="mr-2"/>Delete
+                </button>
+              </div>
+            </div>
           </div>
-          <div>
-            <button onClick={() => promptDelete(course)} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded mr-2">Delete</button>
-            <button onClick={() => handleEdit(course)} className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Edit</button>
-          </div>
-        </div>
-      ))}
-
-      <Modal
-        isOpen={showModal}
-        title="Confirm Deletion"
-        onClose={() => setShowModal(false)}
-      >
-        <p>Are you sure you want to delete the course: {selectedCourse?.title}? This action cannot be undone.</p>
-        <div className="mt-4 flex justify-end">
-          <button onClick={handleDelete} className="bg-red-600 hover:bg-red-800 text-white py-1 px-3 rounded mr-2">Confirm</button>
-          <button onClick={() => setShowModal(false)} className="bg-gray-300 hover:bg-gray-400 text-black py-1 px-3 rounded">Cancel</button>
-        </div>
-      </Modal>
-
-      {notification.show && (
+        ))}
+      </div>
+      {currentCourse && (
+        <Modal
+          isOpen={modalOpen}
+          title={`Confirm ${currentCourse.action === 'delete' ? 'Deletion' : 'Edit'}`}
+          onClose={() => setModalOpen(false)}
+        >
+          <p>Are you sure you want to {currentCourse.action === 'delete' ? `delete "${currentCourse.title}" (${currentCourse.category})?` : `edit "${currentCourse.title}" (${currentCourse.category})?`}</p>
+          {currentCourse.action === 'delete' ? (
+            <button onClick={confirmDelete} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded mr-2">Confirm</button>
+          ) : (
+            <button onClick={performEdit} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mr-2">Proceed to Edit</button>
+          )}
+        </Modal>
+      )}
+      {notification.message && (
         <Notification
           message={notification.message}
           type={notification.type}
-          onClose={() => setNotification({ show: false, message: '', type: '' })}
+          onClose={closeNotification}
         />
       )}
     </div>

@@ -1,43 +1,126 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { getDatabase, ref, onValue } from "firebase/database";
+import { Link } from 'react-router-dom';
+import Loading from './LoadSaveAnimation/Loading';
 
-const works = [
-  {
-    image: "https://images.pexels.com/photos/5444631/pexels-photo-5444631.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    title: "Web Design",
-    description: "NoCodeAPI",
-    link: "#"
-  },
-  {
-    image: "https://images.pexels.com/photos/545067/pexels-photo-545067.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    title: "Creative Design",
-    description: "UIdeck",
-    link: "#"
-  },
-  {
-    image: "https://images.pexels.com/photos/545067/pexels-photo-545067.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    title: "Creative Design",
-    description: "UIdeck",
-    link: "#"
-  },
-  {
-    image: "https://images.pexels.com/photos/545067/pexels-photo-545067.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    title: "Creative Design",
-    description: "UIdeck",
-    link: "#"
-  },
-  // Add more items as needed
-];
+function SampleNextArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{
+        ...style,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#4A90E2",
+        borderRadius: "50%",
+        width: "40px",
+        height: "40px",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        cursor: "pointer",
+        zIndex: 1
+      }}
+      onClick={onClick}
+    >
+      <FaArrowRight color="white" />
+    </div>
+  );
+}
+
+function SamplePrevArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{
+        ...style,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#4A90E2",
+        borderRadius: "50%",
+        width: "40px",
+        height: "40px",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        cursor: "pointer",
+        zIndex: 1
+      }}
+      onClick={onClick}
+    >
+      <FaArrowLeft color="white" />
+    </div>
+  );
+}
 
 function WorksSection() {
+  const [isWorkshopLoading, setIsWorkshopLoading] = useState(true);
+  const [isEventLoading, setIsEventLoading] = useState(true);
+  const [works, setWorks] = useState([]);
+
+
+
+  useEffect(() => {
+    const db = getDatabase();
+
+    const fetchWorkshops = () => {
+      const workshopRef = ref(db, 'workshops');
+      onValue(workshopRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const workshopList = Object.keys(data).map(key => ({
+            id: key,
+            image: data[key].aboutImage,
+            title: data[key].aboutTitle,
+            description: data[key].headerTitle,
+            type: "workshop"
+          }));
+          setWorks(prevWorks => [...prevWorks, ...workshopList]);
+          setIsWorkshopLoading(false);
+        } else {
+          console.log("No data available for workshops");
+        }
+      });
+    };
+
+    const fetchEvents = () => {
+      const eventsRef = ref(db, 'events');
+      onValue(eventsRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const eventList = Object.keys(data).map(key => ({
+            id: key,
+            image: data[key].aboutImage,
+            title: data[key].headerTitle,
+            description: data[key].headerSubTitle,
+            type: "event"
+          }));
+          setWorks(prevWorks => [...prevWorks, ...eventList]);
+          setIsEventLoading(false)
+        } else {
+          console.log("No data available for events");
+        }
+      });
+    };
+
+    fetchWorkshops();
+    fetchEvents();
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
+    autoplay: true,
+    autoplaySpeed: 3000,
     slidesToScroll: 1,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -56,6 +139,8 @@ function WorksSection() {
     ]
   };
 
+  if(isEventLoading || isWorkshopLoading) return (<Loading/>)
+
   return (
     <section id="work" className="bg-gradient-to-r from-cyan-50 to-blue-100 pt-4 pb-7">
       <div className="container mx-auto px-4">
@@ -66,16 +151,15 @@ function WorksSection() {
         <Slider {...settings}>
           {works.map((work, index) => (
             <div key={index} className="p-4">
-              <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src={work.image} alt={work.title} className="w-full h-64 object-cover" />
-                <div className="p-4">
-                  <h5 className="text-xl font-bold">{work.title}</h5>
-                  <p className="text-gray-700">{work.description}</p>
-                  <a href={work.link} className="text-blue-500 hover:text-blue-600 bg-white transition-colors duration-300">
-                    <i className="lni lni-chevron-right"></i>
-                  </a>
+              <Link to={work.type === 'event' ? `/event/${work.id}` : `/workshop/${work.id}`} className="block">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-2xl">
+                  <img src={work.image} alt={work.title} className="w-full h-64 object-cover" />
+                  <div className="p-4">
+                    <h5 className="text-xl font-bold">{work.title}</h5>
+                    <p className="text-gray-700">{work.description}</p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           ))}
         </Slider>
