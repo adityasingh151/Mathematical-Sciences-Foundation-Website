@@ -45,9 +45,10 @@ const ViewEvent = () => {
     setShowModal(true);
   };
 
-  const handleEdit = (event) => {
-    window.location.href = `/edit-event/${event.id}`; // Assuming there's a route set up for editing
-  };
+const handleEdit = (event) => {
+  window.location.href = `/forms/event/edit/${event.id}`; // Direct navigation to edit route
+};
+
 
   if (isLoading) return <div>Loading events...</div>;
 

@@ -1,62 +1,106 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserPlus, FaCalendarPlus, FaUsers, FaChalkboardTeacher, FaImages } from 'react-icons/fa'; // Added FaImages for carousel icon
 
 const DashboardCard = () => {
   const navigate = useNavigate();
-  const cardsData = [
-    {
-      icon: <FaUserPlus className="text-white" size={24} />,
-      count: 8282,
-      label: 'Add Courses',
-      bgColor: 'bg-purple-500',
-      link: '/course-selection'
-    },
-    {
-      icon: <FaCalendarPlus className="text-white" size={24} />,
-      count: 200521,
-      label: 'Add Events',
-      bgColor: 'bg-blue-500',
-      link: '/forms/event'
-    },
-    {
-      icon: <FaUsers className="text-white" size={24} />,
-      count: 215542,
-      label: 'Add People',
-      bgColor: 'bg-pink-500',
-      link: '/forms/people'
-    },
-    {
-      icon: <FaChalkboardTeacher className="text-white" size={24} />,
-      count: 12345,
-      label: 'Add Workshop',
-      bgColor: 'bg-green-500',
-      link: '/forms/workshop'
-    },
-    {
-      icon: <FaImages className="text-white" size={24} />, // New icon for adding carousel images
-      count: 25638, // You can change this to reflect the number of images or keep it static
-      label: 'Add Carousel',
-      bgColor: 'bg-yellow-500',
-      link: '/forms/carousel' // Ensure this route is configured in your React Router setup
-    }
-  ];
 
-  const handleCardClick = (link) => {
-    navigate(link);
+  const handleNavigation = (path) => {
+    navigate(path);
   };
 
   return (
-    <div className="p-8 bg-gray-100 w-full h-fit flex flex-wrap"> {/* Changed to flex layout for better alignment */}
-      {cardsData.map(card => (
-        <div key={card.label} className={`${card.bgColor} p-4 m-2 cursor-pointer flex-1 min-w-[200px] flex items-center justify-between`} onClick={() => handleCardClick(card.link)}>
-          <div className="flex items-center gap-2">
-            {card.icon}
-            <p className="text-white">{card.label}</p>
+    <div className="p-4">
+      {/* Section Header */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">Manage Content</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div 
+            onClick={() => handleNavigation('/admin/forms/course1')}
+            className="card cursor-pointer bg-gradient-to-r from-indigo-500 to-indigo-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-indigo-600"
+          >
+            Add Course 1
           </div>
-          <p className="text-white font-bold">{card.count}</p>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/course2')}
+            className="card cursor-pointer bg-gradient-to-r from-pink-500 to-pink-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-pink-600"
+          >
+            Add Course 2
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/courses')}
+            className="card cursor-pointer bg-gradient-to-r from-teal-500 to-teal-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-teal-600"
+          >
+            Add All Courses
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/event')}
+            className="card cursor-pointer bg-gradient-to-r from-orange-500 to-orange-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-orange-600"
+          >
+            Add Events
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/people')}
+            className="card cursor-pointer bg-gradient-to-r from-gray-500 to-gray-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-gray-600"
+          >
+            Add People
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/workshop')}
+            className="card cursor-pointer bg-gradient-to-r from-lime-500 to-lime-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-lime-600"
+          >
+            Add Workshops
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/carousel')}
+            className="card cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-amber-600"
+          >
+            Add Carousel
+          </div>
         </div>
-      ))}
+      </div>
+
+      {/* Section Header */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">View Content</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div 
+            onClick={() => handleNavigation('/admin/view/courses')}
+            className="card cursor-pointer bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-blue-600"
+          >
+            View Courses
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/events')}
+            className="card cursor-pointer bg-gradient-to-r from-green-500 to-green-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-green-600"
+          >
+            View Events
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/people')}
+            className="card cursor-pointer bg-gradient-to-r from-red-500 to-red-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-red-600"
+          >
+            View People
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/workshops')}
+            className="card cursor-pointer bg-gradient-to-r from-purple-500 to-purple-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-purple-600"
+          >
+            View Workshops
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/carousel')}
+            className="card cursor-pointer bg-gradient-to-r from-yellow-500 to-yellow-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-yellow-600"
+          >
+            View Carousel
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/courses/teachers')}
+            className="card cursor-pointer bg-gradient-to-r from-cyan-500 to-cyan-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-cyan-600"
+          >
+            View Teacher Courses
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { getDatabase, ref, onValue } from "firebase/database";
+import { useParams } from 'react-router-dom';
 import HeaderSection from './workshopPage/HeaderSection';
 import AboutSection from './workshopPage/AboutSection';
-import ScheduleSection from './workshopPage/ScheduleSection';
 import OutcomesSection from './workshopPage/OutcomesSection';
 import QuoteSection from './workshopPage/QuoteSection';
 import RegistrationSection from './workshopPage/RegistrationSection';
@@ -10,23 +10,21 @@ import HowToReach from './workshopPage/HowToReach';
 import Loading from './LoadSaveAnimation/Loading';
 
 const WorkshopPage = () => {
+  const { workshopId } = useParams();
   const [workshopData, setWorkshopData] = useState(null);
-
 
   useEffect(() => {
     const db = getDatabase();
-    const workshopRef = ref(db, 'workshops');
+    const workshopRef = ref(db, 'workshops/' + workshopId);
 
     onValue(workshopRef, (snapshot) => {
       if (snapshot.exists()) {
-        const data = snapshot.val();
-        const lastEntryKey = Object.keys(data).pop();
-        setWorkshopData(data[lastEntryKey]);
+        setWorkshopData(snapshot.val());
       } else {
         console.log("No data available");
       }
     });
-  }, []);
+  }, [workshopId]);
 
   const sectionRefs = {
     header: useRef(null),
@@ -64,7 +62,6 @@ const WorkshopPage = () => {
       });
     };
   }, [workshopData]);
-
 
   if (!workshopData) {
     return <Loading />;
