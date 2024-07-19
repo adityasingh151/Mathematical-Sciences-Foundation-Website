@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getDatabase, ref, push } from "firebase/database";
+import { getDatabase, ref, push, set, get } from "firebase/database";
 import Loading from '../../LoadSaveAnimation/Loading';
 import Saving from '../../LoadSaveAnimation/Saving';
 import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
 import { BsPlusCircle } from 'react-icons/bs';
+import { useParams } from 'react-router-dom';
 
-const CourseForm2 = () => {
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
+const CourseForm2 = ({ editMode = false }) => {
+  const { courseId } = useParams();
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
   const [fields, setFields] = useState(['courseName', 'description', 'fee', 'webinars', 'imageUrl']);
   const imageUrl = watch('imageUrl');
   const [imagePreview, setImagePreview] = useState();
@@ -22,40 +24,63 @@ const CourseForm2 = () => {
   const database = getDatabase();
 
   useEffect(() => {
-    if (imageUrl && imageUrl.length > 0) {
+    if (editMode && courseId) {
+      const db = getDatabase();
+      const courseRef = ref(db, `coursesPage2/${courseId}`);
+      get(courseRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          Object.keys(data).forEach(key => setValue(key, data[key]));
+          setImagePreview(data.imageUrl); // Set image preview
+        } else {
+          console.log('No data available');
+        }
+        setIsLoading(false);
+      }).catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
+    } else {
+      setIsLoading(false);
+    }
+  }, [editMode, courseId, setValue]);
+
+  useEffect(() => {
+    if (imageUrl && imageUrl.length > 0 && imageUrl[0] instanceof File) {
       const fileReader = new FileReader();
       fileReader.onload = (e) => setImagePreview(e.target.result);
       fileReader.readAsDataURL(imageUrl[0]);
     } else {
-      setImagePreview(null);
+      setImagePreview(imageUrl);
     }
   }, [imageUrl]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const onSubmit = async (data) => {
     setIsSaving(true);
     try {
-      const file = data.imageUrl[0];
-      const storageReference = storageRef(storage, `courses/${file.name}`);
-      await uploadBytes(storageReference, file);
-      const downloadURL = await getDownloadURL(storageReference);
+      let downloadURL = imagePreview; // Default to current image URL
+      if (data.imageUrl && data.imageUrl[0] instanceof File) {
+        const file = data.imageUrl[0];
+        const storageReference = storageRef(storage, `coursesPage2/${file.name}`);
+        await uploadBytes(storageReference, file);
+        downloadURL = await getDownloadURL(storageReference);
+      }
       const courseData = {
         ...data,
         imageUrl: downloadURL
       };
-      const coursesRef = ref(database, 'courses');
-      await push(coursesRef, courseData);
-      console.log('Course data submitted successfully!', courseData);
+      if (editMode && courseId) {
+        const courseRef = ref(database, `coursesPage2/${courseId}`);
+        await set(courseRef, courseData);
+        console.log('Course data updated successfully!', courseData);
+      } else {
+        const coursesRef = ref(database, 'coursesPage2');
+        await push(coursesRef, courseData);
+        console.log('Course data submitted successfully!', courseData);
+      }
       setShowSuccess(true);
     } catch (error) {
-      console.log('Error adding course data: ', error);
+      console.log('Error adding/updating course data: ', error);
       setShowError(true);
     } finally {
       setIsSaving(false);
@@ -88,9 +113,12 @@ const CourseForm2 = () => {
     return 'text';
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
-      {isLoading && <Loading />}
       {isSaving && <Saving />}
       <div className="flex flex-col sm:flex-row">
         <div className="flex flex-col space-y-2 p-3 lg:p-6 md:w-1/3">
@@ -105,10 +133,10 @@ const CourseForm2 = () => {
           ))}
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-3 lg:p-6 bg-white shadow-lg rounded-lg flex-grow space-y-4 md:w-2/3">
-          <h2 className="text-xl lg:text-2xl font-bold text-indigo-600">Course Details</h2>
+          <h2 className="text-xl lg:text-2xl font-bold text-indigo-600">{editMode ? 'Edit Course Details' : 'Course Details'}</h2>
           {showSuccess && (
             <SuccessNotification
-              message="Course Created Successfully!"
+              message={editMode ? 'Course Updated Successfully!' : 'Course Created Successfully!'}
               onClose={() => setShowSuccess(false)}
             />
           )}
@@ -128,7 +156,7 @@ const CourseForm2 = () => {
                 <div>
                   <input
                     type="file"
-                    {...register('imageUrl', { required: true })}
+                    {...register('imageUrl')}
                     className="mt-1 block w-full pl-3 py-2 text-sm lg:text-base text-gray-900 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   {imagePreview && <img src={imagePreview} alt="Preview" className="mt-4 h-48 w-auto border rounded-md" />}
@@ -148,7 +176,7 @@ const CourseForm2 = () => {
             </div>
           ))}
           <button type="submit" className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            Submit Course Details
+            {editMode ? 'Update Course Details' : 'Submit Course Details'}
           </button>
         </form>
       </div>
