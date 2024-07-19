@@ -1,43 +1,74 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { getDatabase, ref, push } from "firebase/database";
+import { getDatabase, ref, set, push, get } from 'firebase/database';
 import { BsPlusCircle, BsDashCircle } from 'react-icons/bs';
 import Loading from '../../LoadSaveAnimation/Loading';
 import Saving from '../../LoadSaveAnimation/Saving';
 import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
 
-const CourseForm1 = () => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const [fields, setFields] = useState(['title', 'content', 'details', 'duration', 'action']);
+const CourseForm1 = ({ editMode, courseId }) => {
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
+  const [fields, setFields] = useState(['title', 'content', 'details', 'duration', 'fees', 'imgSrc']);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
-  const details = watch('details');
+  const [imgPreview, setImgPreview] = useState(null);
 
   useEffect(() => {
-    // Simulate a delay to demonstrate the loading state
-    const timer = setTimeout(() => {
+    if (editMode && courseId) {
+      const db = getDatabase();
+      const courseRef = ref(db, `coursesPage1/${courseId}`);
+      get(courseRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          Object.keys(data).forEach(key => setValue(key, data[key]));
+          setImgPreview(data.imgSrc); // Set image preview
+        } else {
+          console.log('No data available');
+        }
+        setIsLoading(false);
+      }).catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
+    } else {
       setIsLoading(false);
-    }, 1000); // Adjust this duration as needed
-
-    return () => clearTimeout(timer);
-  }, []);
+    }
+  }, [editMode, courseId, setValue]);
 
   const onSubmit = async (data) => {
     setIsSaving(true);
     try {
       const db = getDatabase();
-      const coursesRef = ref(db, 'courses');
-      await push(coursesRef, data);
-      console.log('Course data submitted successfully!', data);
+      if (editMode && courseId) {
+        const courseRef = ref(db, `coursesPage1/${courseId}`);
+        await set(courseRef, data);
+        console.log('Course data updated successfully!', data);
+      } else {
+        const coursesRef = ref(db, 'coursesPage1');
+        await push(coursesRef, data);
+        console.log('Course data submitted successfully!', data);
+      }
       setShowSuccess(true); // Show success notification
     } catch (error) {
-      console.log('Error adding course data: ', error);
+      console.log('Error adding/updating course data: ', error);
       setShowError(true); // Show error notification
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setValue('imgSrc', reader.result);
+        setImgPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -58,7 +89,7 @@ const CourseForm1 = () => {
   };
 
   const sectionFields = {
-    courseDetails: ['title', 'content', 'duration', 'action'],
+    courseDetails: ['title', 'content', 'duration', 'fees', 'imgSrc'],
     additionalDetails: ['details']
   };
 
@@ -86,6 +117,13 @@ const CourseForm1 = () => {
                   className={`mt-1 block w-full pl-3 pr-12 py-2 border ${errors[field] ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
                   placeholder={`Enter ${field.replace(/([A-Z])/g, ' $1')}`}
                 />
+              ) : field === 'imgSrc' ? (
+                <input
+                  type="file"
+                  accept="image/*"
+                  className={`mt-1 block w-full pl-3 pr-12 py-2 border ${errors[field] ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                  onChange={handleImageUpload}
+                />
               ) : (
                 <input
                   type={getInputType(field)}
@@ -100,8 +138,13 @@ const CourseForm1 = () => {
               {errors[field] && <p className="mt-1 text-sm text-red-500">{errors[field].message}</p>}
             </div>
           ))}
+          {imgPreview && (
+            <div className="mt-4">
+              <img src={imgPreview} alt="Preview" className="w-full h-64 object-cover" />
+            </div>
+          )}
           <button type="submit" className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            Submit Course Details
+            {editMode ? 'Update Course Details' : 'Submit Course Details'}
           </button>
         </form>
 
@@ -118,7 +161,6 @@ const CourseForm1 = () => {
         </div>
       </div>
     </>
-
   );
 };
 

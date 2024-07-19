@@ -5,9 +5,8 @@ import SponsorsSection from './SponsorsSection'; // Fixed typo in the name
 import WorksSection from './WorksSection';
 import ContactArea from './ContactArea';
 import Loading from './LoadSaveAnimation/Loading';
-import CoursesPage1 from './coursesPage/CoursesPage1';
 import CoursePage2 from './coursesPage/CoursePage2';
-// import CoursesPage1 from './coursesPage/CoursesPage1';
+import CoursePage1 from './coursesPage/CoursePage1';
 import CoursesPage from './coursesPage/CoursesPage'
 import SponsorsImageForm from './dashBoard/inputForms/SponsorsImageForm';
 import ReviewForm from './dashBoard/inputForms/ReviewForn';

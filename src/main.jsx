@@ -9,7 +9,7 @@ import ContactArea from './components/ContactArea';
 import People from './components/People';
 import Hero from './components/Hero';
 import MathematicalSciencesFoundation from './components/MathematicalSciencesFoundation';
-import CoursesPage1 from './components/coursesPage/CoursesPage1';
+import CoursePage1 from './components/coursesPage/CoursePage1';
 import CoursePage2 from './components/coursesPage/CoursePage2';
 import CoursesPage from './components/coursesPage/CoursesPage';
 import WorkshopPage from './components/WorkshopPage';
@@ -33,6 +33,7 @@ import ViewPeople from './components/dashBoard/viewComponents/ViewPeople';
 import ViewCarousel from './components/dashBoard/viewComponents/ViewCarousel';
 import ViewWorkshops from './components/dashBoard/viewComponents/ViewWorkshops';
 import ViewCoursePage1 from './components/dashBoard/viewComponents/ViewCoursePage1';
+import ViewCoursePage2 from './components/dashBoard/viewComponents/ViewCoursePage2'; // Add this import
 
 const router = createBrowserRouter([
   {
@@ -47,16 +48,15 @@ const router = createBrowserRouter([
       { path: 'hero', element: <Hero /> },
       { path: 'msf', element: <MathematicalSciencesFoundation /> },
       { path: 'courses', element: <CoursesPage /> },
-      { path: 'forms/courses/edit/:courseId/:category',element: <CoursesForm />},
       { path: 'about/team', element: <People /> },
       { path: 'about/story', element: <MathematicalSciencesFoundation /> },
       { path: 'courses/students', element: <CoursePage2 /> },
-      { path: 'courses/teachers', element: <CoursesPage1 /> },
+      { path: 'courses/teachers', element: <CoursePage1 /> },
       { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
+      { path: 'view/courses/students', element: <ViewCoursePage2 /> }, // Add this route
       { path: 'workshop/GeoGebra', element: <WorkshopPage /> },
       { path: 'event/1', element: <EventPage /> },
       { path: 'admin/login', element: <AdminLogin /> },
-
       { path: 'course-selection', element: <CourseSelection /> },
       { path: 'forms/course1', element: <CourseForm1 /> },
       { path: 'forms/course2', element: <CourseForm2 /> },
@@ -69,6 +69,8 @@ const router = createBrowserRouter([
       { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
       { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
       { path: 'forms/carousel', element: <CarouselImageForm /> },
+      { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, // Correct edit route
+      { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> }, // Add this route
       {
         path: 'admin',
         element: <ProtectedRoute />,
@@ -90,13 +92,14 @@ const router = createBrowserRouter([
               { path: 'forms/workshop', element: <WorkshopForm /> },
               { path: 'forms/carousel', element: <CarouselImageForm /> },
               { path: 'view/courses', element: <ViewCourses /> },
-              { path: 'forms/courses/edit/:courseId/:category',element: <CoursesForm />},
+              { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, // Ensure the path is correct
+              { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> }, // Add this route
               { path: 'view/events', element: <ViewEvent /> },
               { path: 'view/workshops', element: <ViewWorkshops /> },
               { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
               { path: 'view/carousel', element: <ViewCarousel /> },
               { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
-              // Add more protected admin routes here
+              { path: 'view/courses/students', element: <ViewCoursePage2 /> }, 
             ],
           },
         ],

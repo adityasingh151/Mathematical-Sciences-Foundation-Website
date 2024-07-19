@@ -18,13 +18,13 @@ const DashboardCard = () => {
             onClick={() => handleNavigation('/admin/forms/course1')}
             className="card cursor-pointer bg-gradient-to-r from-indigo-500 to-indigo-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-indigo-600"
           >
-            Add Course 1
+            Add Teacher Courses
           </div>
           <div 
             onClick={() => handleNavigation('/admin/forms/course2')}
             className="card cursor-pointer bg-gradient-to-r from-pink-500 to-pink-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-pink-600"
           >
-            Add Course 2
+            Add Student Courses
           </div>
           <div 
             onClick={() => handleNavigation('/admin/forms/courses')}
@@ -98,6 +98,12 @@ const DashboardCard = () => {
             className="card cursor-pointer bg-gradient-to-r from-cyan-500 to-cyan-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-cyan-600"
           >
             View Teacher Courses
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/courses/students')}
+            className="card cursor-pointer bg-gradient-to-r from-pink-500 to-pink-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-pink-600"
+          >
+            View Student Courses
           </div>
         </div>
       </div>
