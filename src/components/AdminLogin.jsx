@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from './store/authSlice';
 
 function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -8,11 +10,14 @@ function AdminLogin() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const auth = getAuth();
+  const dispatch = useDispatch();
 
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      dispatch(setUser({ uid: user.uid, email: user.email }));
       navigate('/admin/dashboard'); // Assuming there's a dashboard route for logged-in admins
     } catch (error) {
       setError("Failed to login: " + error.message);

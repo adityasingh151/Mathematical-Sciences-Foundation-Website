@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from './databaseConfig/firebaseConfig'; // Adjust the import path if needed
+import { useDispatch, useSelector } from 'react-redux';
+import { clearUser } from './store/authSlice';
 
 const ProtectedRoute = () => {
-    const [user, loading, error] = useAuthState(auth);
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const timestamp = useSelector((state) => state.auth.timestamp);
+  const expireTime = 3600 * 1000; // 1 hour in milliseconds
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-    if (!user || error) {
-        return <Navigate to="/admin/login" replace />;
+  useEffect(() => {
+    // Check if session has expired
+    if (timestamp && Date.now() - timestamp > expireTime) {
+      dispatch(clearUser());
     }
 
-    return <Outlet />;
+    console.log("ProtectedRoute.")
+  }, [timestamp, dispatch, expireTime]);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login"/>;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

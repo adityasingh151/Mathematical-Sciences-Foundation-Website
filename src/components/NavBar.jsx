@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
+import { useDispatch } from "react-redux";
+import { clearUser } from "./store/authSlice";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [workshops, setWorkshops] = useState([]);
   const [events, setEvents] = useState([]);
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
+    dispatch(clearUser())
   };
 
   useEffect(() => {

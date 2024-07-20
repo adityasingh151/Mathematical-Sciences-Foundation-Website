@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const DashboardCard = () => {
@@ -7,6 +7,7 @@ const DashboardCard = () => {
   const handleNavigation = (path) => {
     navigate(path);
   };
+  
 
   return (
     <div className="p-4">
@@ -18,13 +19,13 @@ const DashboardCard = () => {
             onClick={() => handleNavigation('/admin/forms/course1')}
             className="card cursor-pointer bg-gradient-to-r from-indigo-500 to-indigo-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-indigo-600"
           >
-            Add Teacher Courses
+            Add Course 1
           </div>
           <div 
             onClick={() => handleNavigation('/admin/forms/course2')}
             className="card cursor-pointer bg-gradient-to-r from-pink-500 to-pink-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-pink-600"
           >
-            Add Student Courses
+            Add Course 2
           </div>
           <div 
             onClick={() => handleNavigation('/admin/forms/courses')}
@@ -55,6 +56,12 @@ const DashboardCard = () => {
             className="card cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-amber-600"
           >
             Add Carousel
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/gallery')}
+            className="card cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-amber-600"
+          >
+            Add Photos, Videos & Articles
           </div>
         </div>
       </div>
@@ -100,10 +107,10 @@ const DashboardCard = () => {
             View Teacher Courses
           </div>
           <div 
-            onClick={() => handleNavigation('/admin/view/courses/students')}
-            className="card cursor-pointer bg-gradient-to-r from-pink-500 to-pink-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-pink-600"
+            onClick={() => handleNavigation('/admin/view/gallery')}
+            className="card cursor-pointer bg-gradient-to-r from-cyan-500 to-cyan-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-cyan-600"
           >
-            View Student Courses
+            View Images, Videos & Articles
           </div>
         </div>
       </div>
