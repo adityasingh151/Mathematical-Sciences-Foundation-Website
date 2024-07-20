@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { getDatabase, ref, onValue } from "firebase/database";
+import { useParams } from 'react-router-dom';
 import HeaderSection from './eventPage/HeaderSection';
 import AboutSection from './eventPage/AboutSection';
 import FeaturesSection from './eventPage/FeaturesSection';
 import SponsorsSection from './eventPage/SponsorsSection';
-import DetailsSection from './eventPage/DetailsSection';
+// import DetailsSection from './eventPage/DetailsSection';
 import RewardsSection from './eventPage/RewardsSection';
 import AboutOrganizationSection from './eventPage/AboutOrganizationSection';
 import AdvisorySection from './eventPage/AdvisorySection';
@@ -12,6 +13,7 @@ import RegistrationSection from './eventPage/RegistrationSection';
 import Loading from './LoadSaveAnimation/Loading';
 
 const EventPage = () => {
+  const { eventId } = useParams();
   const sectionRefs = {
     header: useRef(null),
     about: useRef(null),
@@ -28,31 +30,25 @@ const EventPage = () => {
 
   useEffect(() => {
     const db = getDatabase();
-    const eventRef = ref(db, 'events'); // Adjust the path as per your database structure
+    const eventRef = ref(db, 'events/' + eventId); // Adjust the path as per your database structure
   
     onValue(eventRef, (snapshot) => {
       const data = snapshot.val();
-      const firstEventKey = Object.keys(data)[0];
-      const firstEventData = data[firstEventKey];
-      console.log(firstEventData);
-      setEventData(firstEventData);
+      setEventData(data);
     });
-
-  },[])
+  }, [eventId]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Add animation class only once on first intersecting
             entry.target.classList.add(entry.target.dataset.animation);
-            // Stop observing the element so animation doesn't trigger again
             observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.3 } // Adjust threshold as needed
+      { threshold: 0.3 }
     );
   
     Object.values(sectionRefs).forEach((ref) => {
@@ -61,14 +57,11 @@ const EventPage = () => {
       }
     });
   
-    // Clean up observer on component unmount
     return () => {
       observer.disconnect();
     };
-  }, [eventData]); // Depend on eventData to ensure refs are updated with latest data
-  
-  
-  
+  }, [eventData]);
+
   if (!eventData) {
     return <Loading/>;
   }
