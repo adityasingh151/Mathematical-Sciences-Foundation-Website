@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./components/store/store";
+
 import App from './App';
 import Home from './components/Home';
 import AboutSection from './components/AboutSection';
@@ -34,6 +38,10 @@ import ViewCarousel from './components/dashBoard/viewComponents/ViewCarousel';
 import ViewWorkshops from './components/dashBoard/viewComponents/ViewWorkshops';
 import ViewCoursePage1 from './components/dashBoard/viewComponents/ViewCoursePage1';
 import ViewCoursePage2 from './components/dashBoard/viewComponents/ViewCoursePage2'; // Add this import
+import EditContent from './components/dashBoard/inputForms/EditContent';
+import ContentForm from './components/dashBoard/inputForms/ContentForm';
+import ViewContent from './components/dashBoard/viewComponents/ViewContent';
+
 
 const router = createBrowserRouter([
   {
@@ -52,25 +60,25 @@ const router = createBrowserRouter([
       { path: 'about/story', element: <MathematicalSciencesFoundation /> },
       { path: 'courses/students', element: <CoursePage2 /> },
       { path: 'courses/teachers', element: <CoursePage1 /> },
-      { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
-      { path: 'view/courses/students', element: <ViewCoursePage2 /> }, // Add this route
-      { path: 'workshop/GeoGebra', element: <WorkshopPage /> },
-      { path: 'event/1', element: <EventPage /> },
+      // { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
+      // { path: 'view/courses/students', element: <ViewCoursePage2 /> }, // Add this route
+      { path: "workshop/:workshopId", element: <WorkshopPage /> },
+      { path: "event/:eventId", element: <EventPage /> },
       { path: 'admin/login', element: <AdminLogin /> },
-      { path: 'course-selection', element: <CourseSelection /> },
-      { path: 'forms/course1', element: <CourseForm1 /> },
-      { path: 'forms/course2', element: <CourseForm2 /> },
-      { path: 'forms/courses', element: <CoursesForm /> },
-      { path: 'forms/event', element: <EventForm /> },
-      { path: 'forms/event/edit/:eventId', element: <EventForm /> },
-      { path: 'forms/people', element: <PeopleForm /> },
-      { path: 'forms/workshop', element: <WorkshopForm /> },
-      { path: 'view/courses', element: <ViewCourses /> },
-      { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
+      // { path: 'course-selection', element: <CourseSelection /> },
+      // { path: 'forms/course1', element: <CourseForm1 /> },
+      // { path: 'forms/course2', element: <CourseForm2 /> },
+      // { path: 'forms/courses', element: <CoursesForm /> },
+      // { path: 'forms/event', element: <EventForm /> },
+      // { path: 'forms/event/edit/:eventId', element: <EventForm /> },
+      // { path: 'forms/people', element: <PeopleForm /> },
+      // { path: 'forms/workshop', element: <WorkshopForm /> },
+      // { path: 'view/courses', element: <ViewCourses /> },
+      // { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
       { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
       { path: 'forms/carousel', element: <CarouselImageForm /> },
-      { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, // Correct edit route
-      { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> }, // Add this route
+      // { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, // Correct edit route
+      // { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> }, // Add this route
       {
         path: 'admin',
         element: <ProtectedRoute />,
@@ -86,12 +94,17 @@ const router = createBrowserRouter([
               { path: 'forms/courses', element: <CoursesForm /> },
               { path: 'forms/event', element: <EventForm /> },
               { path: 'forms/event/edit/:eventId', element: <EventForm /> },
+              { path: "forms/image/edit/:contentId", element: <ContentForm /> },
+              { path: "forms/video/edit/:contentId", element: <ContentForm /> },
+              { path: "forms/article/edit/:contentId", element: <ContentForm /> },
               { path: 'forms/people', element: <PeopleForm /> },
               { path: 'forms/people/edit/:personId', element: <PeopleForm /> },
               { path: 'view/people', element: <ViewPeople /> },
               { path: 'forms/workshop', element: <WorkshopForm /> },
               { path: 'forms/carousel', element: <CarouselImageForm /> },
+              { path: "forms/gallery", element: <ContentForm /> },
               { path: 'view/courses', element: <ViewCourses /> },
+              { path: "view/gallery", element: <ViewContent /> },
               { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, // Ensure the path is correct
               { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> }, // Add this route
               { path: 'view/events', element: <ViewEvent /> },
@@ -111,6 +124,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
   </React.StrictMode>
 );
