@@ -9,7 +9,7 @@ import CoursePage2 from './coursesPage/CoursePage2';
 import CoursePage1 from './coursesPage/CoursePage1';
 import CoursesPage from './coursesPage/CoursesPage'
 import SponsorsImageForm from './dashBoard/inputForms/SponsorsImageForm';
-import ReviewForm from './dashBoard/inputForms/ReviewForn';
+import ReviewForm from './dashBoard/inputForms/ReviewForm';
 import ReviewsDisplay from './ReviewsDisplay';
 
 function Home() {
@@ -37,7 +37,7 @@ function Home() {
       <WorksSection />
       <ContactArea />
    {/* <SponsorsImageForm/> */}
-   <ReviewForm/>
+   {/* <ReviewForm/> */}
    <ReviewsDisplay/>
     </>
   );

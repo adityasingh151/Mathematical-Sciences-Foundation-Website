@@ -37,16 +37,20 @@ import ViewPeople from './components/dashBoard/viewComponents/ViewPeople';
 import ViewCarousel from './components/dashBoard/viewComponents/ViewCarousel';
 import ViewWorkshops from './components/dashBoard/viewComponents/ViewWorkshops';
 import ViewCoursePage1 from './components/dashBoard/viewComponents/ViewCoursePage1';
-import ViewCoursePage2 from './components/dashBoard/viewComponents/ViewCoursePage2'; // Add this import
+import ViewCoursePage2 from './components/dashBoard/viewComponents/ViewCoursePage2';
 import EditContent from './components/dashBoard/inputForms/EditContent';
 import ContentForm from './components/dashBoard/inputForms/ContentForm';
 import ViewContent from './components/dashBoard/viewComponents/ViewContent';
+import NotFoundPage from './components/NotFoundPage';
+import ReviewForm from './components/dashBoard/inputForms/ReviewForm';
+import ViewReviews from './components/dashBoard/viewComponents/ViewReviews';
 
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+    errorElement: <NotFoundPage />,
     children: [
       { path: '', element: <Home /> },
       { path: 'about', element: <AboutSection /> },
@@ -60,25 +64,11 @@ const router = createBrowserRouter([
       { path: 'about/story', element: <MathematicalSciencesFoundation /> },
       { path: 'courses/students', element: <CoursePage2 /> },
       { path: 'courses/teachers', element: <CoursePage1 /> },
-      // { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
-      // { path: 'view/courses/students', element: <ViewCoursePage2 /> }, // Add this route
       { path: "workshop/:workshopId", element: <WorkshopPage /> },
       { path: "event/:eventId", element: <EventPage /> },
       { path: 'admin/login', element: <AdminLogin /> },
-      // { path: 'course-selection', element: <CourseSelection /> },
-      // { path: 'forms/course1', element: <CourseForm1 /> },
-      // { path: 'forms/course2', element: <CourseForm2 /> },
-      // { path: 'forms/courses', element: <CoursesForm /> },
-      // { path: 'forms/event', element: <EventForm /> },
-      // { path: 'forms/event/edit/:eventId', element: <EventForm /> },
-      // { path: 'forms/people', element: <PeopleForm /> },
-      // { path: 'forms/workshop', element: <WorkshopForm /> },
-      // { path: 'view/courses', element: <ViewCourses /> },
-      // { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
       { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
       { path: 'forms/carousel', element: <CarouselImageForm /> },
-      // { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, // Correct edit route
-      // { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> }, // Add this route
       {
         path: 'admin',
         element: <ProtectedRoute />,
@@ -105,14 +95,16 @@ const router = createBrowserRouter([
               { path: "forms/gallery", element: <ContentForm /> },
               { path: 'view/courses', element: <ViewCourses /> },
               { path: "view/gallery", element: <ViewContent /> },
-              { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, // Ensure the path is correct
-              { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> }, // Add this route
+              { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, 
+              { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> },
               { path: 'view/events', element: <ViewEvent /> },
               { path: 'view/workshops', element: <ViewWorkshops /> },
               { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
               { path: 'view/carousel', element: <ViewCarousel /> },
               { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
-              { path: 'view/courses/students', element: <ViewCoursePage2 /> }, 
+              { path: 'view/courses/college', element: <ViewCoursePage2 /> },
+              { path: 'forms/testimonials', element: <ReviewForm /> },
+              { path: 'view/testimonials', element: <ViewReviews /> },
             ],
           },
         ],
