@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
-import { useDispatch } from "react-redux";
-import { clearUser } from "./store/authSlice";
 
 const Navbar = () => {
-  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [workshops, setWorkshops] = useState([]);
   const [events, setEvents] = useState([]);
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
-    dispatch(clearUser())
   };
 
   useEffect(() => {
@@ -49,7 +45,7 @@ const Navbar = () => {
 
   const navItems = [
     {
-      name: "About ↓",
+      name: "About",
       path: "/about/story",
       dropdown: [
         { name: "Our Team", path: "/about/team" },
@@ -57,7 +53,7 @@ const Navbar = () => {
       ],
     },
     {
-      name: "Initiatives ↓",
+      name: "Initiatives",
       path: "/initiatives",
       dropdown: [
         { name: "Initiative 1", path: "/initiatives/1" },
@@ -65,7 +61,7 @@ const Navbar = () => {
       ],
     },
     {
-      name: "Online Courses ↓",
+      name: "Online Courses",
       path: "/courses",
       dropdown: [
         { name: "Courses for Students", path: "courses/students" },
@@ -73,7 +69,7 @@ const Navbar = () => {
       ],
     },
     {
-      name: "Workshops ↓",
+      name: "Workshops",
       path: `/workshop/${workshops[0]?.id}`,
       dropdown: workshops.map(workshop => ({
         name: workshop.headerTitle,
@@ -81,7 +77,7 @@ const Navbar = () => {
       })),
     },
     {
-      name: "Events ↓",
+      name: "Events",
       path: `/event/${events[0]?.id}`,
       dropdown: events.map(event => ({
         name: event.headerTitle,
@@ -89,7 +85,7 @@ const Navbar = () => {
       })),
     },
     {
-      name: "Result ↓",
+      name: "Result",
       path: "/result",
       dropdown: [
         { name: "Recognising Ramanujan 2020 Result", path: "/result/2023" },
@@ -145,7 +141,7 @@ const Navbar = () => {
                         : "w-fit mt-1 mb-0 text-gray-700 text-center hover:text-blue-500 md:mx-4 md:my-0"
                     }
                   >
-                    {item.name}
+                    {item.name} <span className="ml-1">&#9656;</span>
                   </NavLink>
                   <div className="w-fit absolute hidden group-hover:block bg-white shadow-md rounded-md mt-0 z-50">
                     {item.dropdown.map((subItem, subIndex) => (

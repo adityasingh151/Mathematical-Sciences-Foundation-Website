@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { AiOutlineDashboard, AiOutlineForm, AiOutlineSetting, AiOutlineUser, AiOutlinePieChart, AiOutlineBarChart } from 'react-icons/ai';
+import { AiOutlineDashboard} from 'react-icons/ai';
 
 const Sidebar = () => {
     return (

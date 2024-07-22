@@ -63,8 +63,18 @@ const DashboardCard = () => {
           >
             Add Photos, Videos & Articles
           </div>
+          
+          <div 
+            onClick={() => handleNavigation('/admin/forms/testimonials')}
+            className="card cursor-pointer bg-gradient-to-r from-purple-500 to-purple-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-purple-600"
+          >
+            Add Testimonials
+          </div>
+          
+          
         </div>
       </div>
+      
 
       {/* Section Header */}
       <div className="mb-8">
@@ -107,10 +117,22 @@ const DashboardCard = () => {
             View Teacher Courses
           </div>
           <div 
+            onClick={() => handleNavigation('/admin/view/courses/college')}
+            className="card cursor-pointer bg-gradient-to-r from-gray-500 to-gray-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-gray-600"
+          >
+            View Student Courses
+          </div>
+          <div 
             onClick={() => handleNavigation('/admin/view/gallery')}
             className="card cursor-pointer bg-gradient-to-r from-cyan-500 to-cyan-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-cyan-600"
           >
             View Images, Videos & Articles
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/testimonials')}
+            className="card cursor-pointer bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-blue-600"
+          >
+            View Testimonials
           </div>
         </div>
       </div>
