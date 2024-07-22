@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './store/authSlice';
 
 function AdminLogin() {
@@ -11,15 +11,27 @@ function AdminLogin() {
   const navigate = useNavigate();
   const auth = getAuth();
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/admin/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
+  console.log("AdminLogin component rendered");
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    console.log("Attempting login with email:", email);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      console.log("Login successful, user:", user);
       dispatch(setUser({ uid: user.uid, email: user.email }));
       navigate('/admin/dashboard'); // Assuming there's a dashboard route for logged-in admins
     } catch (error) {
+      console.error("Failed to login:", error);
       setError("Failed to login: " + error.message);
     }
   };
@@ -29,10 +41,12 @@ function AdminLogin() {
       setError("Please enter your email address to reset the password.");
       return;
     }
+    console.log("Attempting to send password reset email to:", email);
     try {
       await sendPasswordResetEmail(auth, email);
-      alert('Password reset email sent! Check your inbox.');
+      alert('Password reset email sent!');
     } catch (error) {
+      console.error("Failed to send reset email:", error);
       setError("Failed to send reset email: " + error.message);
     }
   };
@@ -53,6 +67,7 @@ function AdminLogin() {
               required
               className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition duration-300 ease-in-out"
               placeholder="Enter your email"
+              autoComplete="email"
             />
           </div>
           <div>
@@ -65,12 +80,13 @@ function AdminLogin() {
               required
               className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition duration-300 ease-in-out"
               placeholder="Enter your password"
+              autoComplete="current-password"
             />
           </div>
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="group relative w-1/2 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out"
+              className={`group relative w-1/2 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out ${!email || !password ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={!email || !password}
             >
               Log in

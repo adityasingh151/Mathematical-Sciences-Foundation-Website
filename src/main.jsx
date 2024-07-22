@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./components/store/store";
 
 import App from './App';
+import PublicLayout from './components/PublicLayout';
 import Home from './components/Home';
 import AboutSection from './components/AboutSection';
 import Carousel from './components/Carousel';
@@ -38,37 +39,41 @@ import ViewCarousel from './components/dashBoard/viewComponents/ViewCarousel';
 import ViewWorkshops from './components/dashBoard/viewComponents/ViewWorkshops';
 import ViewCoursePage1 from './components/dashBoard/viewComponents/ViewCoursePage1';
 import ViewCoursePage2 from './components/dashBoard/viewComponents/ViewCoursePage2';
-import EditContent from './components/dashBoard/inputForms/EditContent';
 import ContentForm from './components/dashBoard/inputForms/ContentForm';
 import ViewContent from './components/dashBoard/viewComponents/ViewContent';
-import NotFoundPage from './components/NotFoundPage';
+import NotificationForm from './components/dashBoard/inputForms/NotificationForm';
+import ViewNotifications from './components/dashBoard/viewComponents/ViewNotification';
 import ReviewForm from './components/dashBoard/inputForms/ReviewForm';
-import ViewReviews from './components/dashBoard/viewComponents/ViewReviews';
-
+import ViewReviews from './components/dashBoard/viewComponents/ViewReviews'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <NotFoundPage />,
     children: [
-      { path: '', element: <Home /> },
-      { path: 'about', element: <AboutSection /> },
-      { path: 'carousel', element: <Carousel /> },
-      { path: 'contact', element: <ContactArea /> },
-      { path: 'people', element: <People /> },
-      { path: 'hero', element: <Hero /> },
-      { path: 'msf', element: <MathematicalSciencesFoundation /> },
-      { path: 'courses', element: <CoursesPage /> },
-      { path: 'about/team', element: <People /> },
-      { path: 'about/story', element: <MathematicalSciencesFoundation /> },
-      { path: 'courses/students', element: <CoursePage2 /> },
-      { path: 'courses/teachers', element: <CoursePage1 /> },
-      { path: "workshop/:workshopId", element: <WorkshopPage /> },
-      { path: "event/:eventId", element: <EventPage /> },
-      { path: 'admin/login', element: <AdminLogin /> },
-      { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
-      { path: 'forms/carousel', element: <CarouselImageForm /> },
+      {
+        path: '/',
+        element: <PublicLayout />,
+        children: [
+          { path: '', element: <Home /> },
+          { path: 'about', element: <AboutSection /> },
+          { path: 'carousel', element: <Carousel /> },
+          { path: 'contact', element: <ContactArea /> },
+          { path: 'people', element: <People /> },
+          { path: 'hero', element: <Hero /> },
+          { path: 'msf', element: <MathematicalSciencesFoundation /> },
+          { path: 'courses', element: <CoursesPage /> },
+          { path: 'about/team', element: <People /> },
+          { path: 'about/story', element: <MathematicalSciencesFoundation /> },
+          { path: 'courses/students', element: <CoursePage2 /> },
+          { path: 'courses/teachers', element: <CoursePage1 /> },
+          { path: "workshop/:workshopId", element: <WorkshopPage /> },
+          { path: "event/:eventId", element: <EventPage /> },
+          { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
+          { path: 'forms/carousel', element: <CarouselImageForm /> },
+          { path: 'admin/login', element: <AdminLogin /> },
+        ],
+      },
       {
         path: 'admin',
         element: <ProtectedRoute />,
@@ -93,17 +98,19 @@ const router = createBrowserRouter([
               { path: 'forms/workshop', element: <WorkshopForm /> },
               { path: 'forms/carousel', element: <CarouselImageForm /> },
               { path: "forms/gallery", element: <ContentForm /> },
+              { path: "forms/notification", element: <NotificationForm /> },
               { path: 'view/courses', element: <ViewCourses /> },
               { path: "view/gallery", element: <ViewContent /> },
-              { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> }, 
+              { path: "view/notification", element: <ViewNotifications /> },
+              { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> },
               { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> },
+              { path: 'forms/testimonials', element: <ReviewForm /> },
               { path: 'view/events', element: <ViewEvent /> },
               { path: 'view/workshops', element: <ViewWorkshops /> },
               { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
               { path: 'view/carousel', element: <ViewCarousel /> },
               { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
-              { path: 'view/courses/college', element: <ViewCoursePage2 /> },
-              { path: 'forms/testimonials', element: <ReviewForm /> },
+              { path: 'view/courses/students', element: <ViewCoursePage2 /> },
               { path: 'view/testimonials', element: <ViewReviews /> },
             ],
           },

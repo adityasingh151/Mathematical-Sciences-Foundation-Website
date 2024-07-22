@@ -10,11 +10,14 @@ const DashboardCard = () => {
   
 
   return (
-    <div className="p-4">
+    <div className="mt-6">
+       <h2 className="invisible md:visible md:text-4xl lg:text-5xl sm:text-2xl animate-bounce shadow-gray-600 w-fit text-xl font-bold mx-auto text-center text-indigo-900 my-2">
+          Mathematical Sciences Foundation
+        </h2>
       {/* Section Header */}
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">Manage Content</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="mb-4">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">Manage Content</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div 
             onClick={() => handleNavigation('/admin/forms/course1')}
             className="card cursor-pointer bg-gradient-to-r from-indigo-500 to-indigo-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-indigo-600"
@@ -63,23 +66,26 @@ const DashboardCard = () => {
           >
             Add Photos, Videos & Articles
           </div>
-          
+          <div 
+            onClick={() => handleNavigation('/admin/forms/notification')}
+            className="card cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-amber-600"
+          >
+            Add Notifications
+          </div>
+
           <div 
             onClick={() => handleNavigation('/admin/forms/testimonials')}
             className="card cursor-pointer bg-gradient-to-r from-purple-500 to-purple-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-purple-600"
           >
             Add Testimonials
           </div>
-          
-          
         </div>
       </div>
-      
 
       {/* Section Header */}
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">View Content</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="mb-4">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">View Content</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div 
             onClick={() => handleNavigation('/admin/view/courses')}
             className="card cursor-pointer bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-blue-600"
@@ -127,6 +133,12 @@ const DashboardCard = () => {
             className="card cursor-pointer bg-gradient-to-r from-cyan-500 to-cyan-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-cyan-600"
           >
             View Images, Videos & Articles
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/notification')}
+            className="card cursor-pointer bg-gradient-to-r from-cyan-500 to-cyan-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-cyan-600"
+          >
+            View Notifications
           </div>
           <div 
             onClick={() => handleNavigation('/admin/view/testimonials')}

@@ -29,18 +29,7 @@ import ViewCourses from './components/dashBoard/viewComponents/ViewCourses';
 function App() {
   return (
     <>
-       <NavBar />
       <Outlet />
-      <Footer/> 
-      {/* <WorkshopPage /> */}
-       {/* <CarouselView/> */}
-       {/* <PeopleView/> */}
-       {/* <ViewEvent/> */}
-       {/* <ViewWorkshop/> */}
-       {/* <ViewCourses/> */}
-       {/* <CoursesForm/> */}
-     
-    
     </>
   );
 }

@@ -7,19 +7,23 @@ const ProtectedRoute = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const timestamp = useSelector((state) => state.auth.timestamp);
-  const expireTime = 3600 * 1000; // 1 hour in milliseconds
+  const expireTime = 3600 * 1000 * 24 * 7; // 5 seconds for testing
 
   useEffect(() => {
-    // Check if session has expired
-    if (timestamp && Date.now() - timestamp > expireTime) {
-      dispatch(clearUser());
-    }
+    const checkSession = () => {
+      if (timestamp && Date.now() - timestamp > expireTime) {
+        dispatch(clearUser());
+      }
+    };
 
-    console.log("ProtectedRoute.")
-  }, [timestamp, dispatch, expireTime]);
+    const intervalId = setInterval(checkSession, 3600 * 1000); // Check every hour
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [timestamp, dispatch]);
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login"/>;
+    return <Navigate to="/admin/login" />;
   }
 
   return <Outlet />;
