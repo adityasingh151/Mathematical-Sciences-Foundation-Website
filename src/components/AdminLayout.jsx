@@ -5,9 +5,9 @@ import Sidebar from './dashBoard/SideBar';
 
 const AdminLayout = () => {
     return (
-        <div className="flex">
+        <div className="md:flex">
             <Sidebar />
-            <div className="flex-grow pl-64 p-4 bg-gray-100 min-h-screen"> 
+            <div className="flex-grow pl-2 bg-gray-100 min-h-screen"> 
                 <Outlet />
             </div>
         </div>
