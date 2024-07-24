@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getDatabase, ref, push } from "firebase/database";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import Loading from '../../LoadSaveAnimation/Loading';
 import Saving from '../../LoadSaveAnimation/Saving';
 import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
@@ -12,6 +13,7 @@ const ReviewForm = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,19 +24,38 @@ const ReviewForm = () => {
 
   const onSubmit = async (data) => {
     setIsSaving(true);
+    const db = getDatabase();
+    const storage = getStorage();
+
     try {
-      const reviewRef = ref(getDatabase(), 'reviews');
+      let imageUrl = 'https://i.ibb.co/4g1D9cv/imgslider1.png'; // Default image URL
+
+      if (imageFile) {
+        const imageRef = storageRef(storage, `reviews/${imageFile.name}`);
+        await uploadBytes(imageRef, imageFile);
+        imageUrl = await getDownloadURL(imageRef);
+      }
+
+      const reviewRef = ref(db, 'reviews');
       await push(reviewRef, {
         name: data.name,
         review: data.review,
         designation: data.designation,
+        imageUrl,
       });
+
       setShowSuccess(true);
     } catch (error) {
       console.error('Error saving review: ', error);
       setShowError(true);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
     }
   };
 
@@ -80,6 +101,17 @@ const ReviewForm = () => {
             <input
               type="text"
               {...register('designation')}
+              className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </label>
+        </div>
+        <div className="my-4">
+          <label className="block text-base font-medium text-gray-700">
+            Reviewer's Image
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
               className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
           </label>

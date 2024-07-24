@@ -35,9 +35,8 @@ function Home() {
       <AboutSection />
       <SponsorsSection />
       <WorksSection />
+      <ReviewsDisplay/>
       <ContactArea />
-   <ReviewForm/>
-   <ReviewsDisplay/>
     </>
   );
 }
