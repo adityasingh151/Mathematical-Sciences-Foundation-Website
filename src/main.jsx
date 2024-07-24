@@ -45,9 +45,11 @@ import NotificationForm from './components/dashBoard/inputForms/NotificationForm
 import ViewNotifications from './components/dashBoard/viewComponents/ViewNotification';
 import ReviewForm from './components/dashBoard/inputForms/ReviewForm';
 import ViewReviews from './components/dashBoard/viewComponents/ViewReviews'
+import NotFoundPage from './components/NotFoundPage';
 
 const router = createBrowserRouter([
   {
+    errorElement:<NotFoundPage/>,
     path: '/',
     element: <App />,
     children: [
@@ -110,7 +112,7 @@ const router = createBrowserRouter([
               { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
               { path: 'view/carousel', element: <ViewCarousel /> },
               { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
-              { path: 'view/courses/students', element: <ViewCoursePage2 /> },
+              { path: 'view/courses/college', element: <ViewCoursePage2 /> },
               { path: 'view/testimonials', element: <ViewReviews /> },
             ],
           },

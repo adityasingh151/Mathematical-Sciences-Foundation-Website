@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import Loading from '../../LoadSaveAnimation/Loading';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
 import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
@@ -13,6 +14,7 @@ const ViewReviews = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [editingReview, setEditingReview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
 
@@ -49,6 +51,7 @@ const ViewReviews = () => {
     setValue('name', review.name);
     setValue('review', review.review);
     setValue('designation', review.designation);
+    setImageFile(null); // Reset the image file when editing
   };
 
   const handleDelete = async (id) => {
@@ -66,18 +69,38 @@ const ViewReviews = () => {
     }
   };
 
+  const handleImageUpload = async (file) => {
+    const storage = getStorage();
+    const storagePath = `review_images/${file.name}`;
+    const imageRef = storageRef(storage, storagePath);
+
+    await uploadBytes(imageRef, file);
+    const imageURL = await getDownloadURL(imageRef);
+
+    return imageURL;
+  };
+
   const onSubmit = async (data) => {
     setIsSaving(true);
     try {
+      let imageUrl = editingReview?.imageUrl;
+
+      if (imageFile) {
+        imageUrl = await handleImageUpload(imageFile);
+      }
+
       const reviewRef = ref(getDatabase(), `reviews/${editingReview.id}`);
       await update(reviewRef, {
         name: data.name,
         review: data.review,
         designation: data.designation,
+        imageUrl: imageUrl || editingReview?.imageUrl,
       });
-      setReviews(reviews.map(review => review.id === editingReview.id ? { id: editingReview.id, ...data } : review));
+      
+      setReviews(reviews.map(review => review.id === editingReview.id ? { id: editingReview.id, ...data, imageUrl } : review));
       setShowSuccess(true);
       setEditingReview(null);
+      setImageFile(null); // Reset the image file
     } catch (error) {
       console.error('Error updating review: ', error);
       setShowError(true);
@@ -107,6 +130,9 @@ const ViewReviews = () => {
                     <h3 className="text-xl font-bold text-rose-600">{review.name}</h3>
                     <p className="text-gray-500">{review.designation}</p>
                     <p className="mt-4 text-gray-700">{review.review}</p>
+                    {review.imageUrl && (
+                      <img src={review.imageUrl} alt="Reviewer" className="w-32 h-32 object-cover mt-4 rounded-full" />
+                    )}
                   </div>
                   <div className="flex gap-4">
                     <button
@@ -161,6 +187,16 @@ const ViewReviews = () => {
                     type="text"
                     {...register('designation')}
                     className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </label>
+              </div>
+              <div>
+                <label className="block text-base font-medium text-gray-700">
+                  Reviewer's Image
+                  <input
+                    type="file"
+                    onChange={(e) => setImageFile(e.target.files[0])}
+                    className="mt-1 block w-full text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </label>
               </div>

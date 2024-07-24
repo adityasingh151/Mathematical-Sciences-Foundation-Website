@@ -54,7 +54,7 @@ const ViewCoursePage1 = () => {
   };
 
   const handleEdit = (course) => {
-    navigate(`/forms/course1/edit/${course.id}`);
+    navigate(`/admin/forms/course1/edit/${course.id}`);
   };
 
   const closeNotification = () => {
