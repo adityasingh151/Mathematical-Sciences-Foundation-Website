@@ -11,7 +11,7 @@ function Footer() {
           <div>
             <img src="/msflogo.jpg" className="mr-5 h-6 sm:h-9" alt="MSF logo" />
             <p className="max-w-xs mt-4 text-sm text-gray-600">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, accusantium.
+              All rights reserved to Mathematical Sciences Foundation.
             </p>
             {/* Social icons section */}
           </div>
@@ -47,7 +47,7 @@ function Footer() {
           </div>
         </div>
         <p className="mt-8 text-xs text-gray-800">
-          © {currentYear} Mathematical Sciences Organisation
+          © {currentYear} Mathematical Sciences Foundation
         </p>
       </div>
     </footer>

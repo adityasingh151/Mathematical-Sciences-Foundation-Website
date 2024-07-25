@@ -13,13 +13,16 @@ const Navbar = () => {
 
   useEffect(() => {
     const db = getDatabase();
-    const workshopRef = ref(db, 'workshops');
+    const workshopRef = ref(db, "workshops");
 
     onValue(workshopRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        const workshopList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-        setWorkshops(workshopList);
+        const workshopList = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setWorkshops(workshopList.reverse());
       } else {
         console.log("No data available");
       }
@@ -29,19 +32,21 @@ const Navbar = () => {
   //For events
   useEffect(() => {
     const db = getDatabase();
-    const eventsRef = ref(db, 'events');
+    const eventsRef = ref(db, "events");
 
     onValue(eventsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        const eventList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-        setEvents(eventList);
+        const eventList = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setEvents(eventList.reverse());
       } else {
         console.log("No data available");
       }
     });
   }, []);
-
 
   const navItems = [
     {
@@ -71,26 +76,22 @@ const Navbar = () => {
     {
       name: "Workshops",
       path: `/workshop/${workshops[0]?.id}`,
-      dropdown: workshops.map(workshop => ({
+      dropdown: workshops.map((workshop) => ({
         name: workshop.headerTitle,
-        path: `/workshop/${workshop.id}`
+        path: `/workshop/${workshop.id}`,
       })),
     },
     {
       name: "Events",
       path: `/event/${events[0]?.id}`,
-      dropdown: events.map(event => ({
+      dropdown: events.map((event) => ({
         name: event.headerTitle,
-        path: `/event/${event.id}`
+        path: `/event/${event.id}`,
       })),
     },
     {
-      name: "Result",
-      path: "/result",
-      dropdown: [
-        { name: "Recognising Ramanujan 2020 Result", path: "/result/2023" },
-        { name: "2022 Results", path: "/result/2022" },
-      ],
+      name: "Gallery",
+      path: "/gallery"
     },
     { name: "Latest", path: "/latest" },
   ];

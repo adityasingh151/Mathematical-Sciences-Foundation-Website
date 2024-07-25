@@ -69,11 +69,8 @@ const EventPage = () => {
   const headerTitle = eventData.headerTitle;
   const headerSubtitle = eventData.headerSubtitle;
   const headerButtonText = "Register Now";
-  const onHeaderButtonClick = () => {
-    window.location.href = '#registration';
-  };
 
-  const aboutTitle = eventData.aboutTitle;
+  // const aboutTitle = eventData.aboutTitle;
   const aboutContent = eventData.aboutDescription;
   const aboutImageUrl = eventData.aboutImage;
 
@@ -112,7 +109,7 @@ const EventPage = () => {
   const registrationDetails = [
     { label: "Eligibility", value: eventData.eligibility },
     { label: "Date & Time", value: eventData.eventDate + " " + eventData.eventTime },
-    { label: "Fees", value: "Rs." + eventData.registrationFee },
+    { label: "Fees", value: " Rs." + eventData.registrationFee +" /-" },
   ];
   const registrationInfo = `<a href='${eventData.registrationLink}' target='_blank' rel='noreferrer noopener'>${eventData.registrationLink}</a>`;
   const registrationButtonText = "Register Now";
@@ -127,11 +124,11 @@ const EventPage = () => {
         title={headerTitle}
         subtitle={headerSubtitle}
         buttonText={headerButtonText}
-        onButtonClick={onHeaderButtonClick}
+        onButtonClick={onRegistrationButtonClick}
       />
       <AboutSection
         ref={sectionRefs.about}
-        title={aboutTitle}
+        // title={aboutTitle}
         content={aboutContent}
         imageUrl={aboutImageUrl}
       />
