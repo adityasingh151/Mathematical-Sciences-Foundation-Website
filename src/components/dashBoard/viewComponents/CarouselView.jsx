@@ -7,6 +7,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import Modal from '../../Modal'; // Assuming Modal is in the same directory
+import Loading from '../../LoadSaveAnimation/Loading';
 
 const CarouselView = () => {
   const [images, setImages] = useState([]);
@@ -57,7 +58,7 @@ const CarouselView = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading/>;
   if (error) return <div>Error: {error}</div>;
 
   return (

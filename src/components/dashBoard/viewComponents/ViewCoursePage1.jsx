@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { BsPencilSquare, BsTrash } from 'react-icons/bs';
 import Modal from '../../Modal'; // Ensure the path is correct
 import Notification from '../../Notification'; // Ensure the path is correct
+import Loading from '../../LoadSaveAnimation/Loading';
 
 const ViewCoursePage1 = () => {
   const [courses, setCourses] = useState([]);
@@ -61,7 +62,7 @@ const ViewCoursePage1 = () => {
     setNotification({ message: '', type: '' });
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading/>;
   if (error) return <div>Error: {error}</div>;
 
   return (

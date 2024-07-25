@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue, remove } from "firebase/database";
 import Modal from '../../Modal'; // Reuse the Modal component
 import Notification from '../../Notification'; // Reuse the Notification component
+import Loading from '../../LoadSaveAnimation/Loading';
 
 const ViewWorkshop = () => {
   const [workshops, setWorkshops] = useState([]);
@@ -59,7 +60,7 @@ const ViewWorkshop = () => {
     window.location.href = `/edit-workshop/${workshop.id}`; // Ensure this route is correctly set up
   };
 
-  if (isLoading) return <div>Loading workshops...</div>;
+  if (isLoading) return <Loading/>;
   if (isError) return <div>Failed to load workshops. Please try again later.</div>;
 
   return (

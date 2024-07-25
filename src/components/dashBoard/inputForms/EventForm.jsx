@@ -59,15 +59,42 @@ const EventForm = () => {
   }, [eventId, setValue]);
 
   useEffect(() => {
-    setImagePreview(aboutImage);
+    if (aboutImage && aboutImage.length > 0) {
+      const file = aboutImage[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null);
+    }
   }, [aboutImage]);
 
   useEffect(() => {
-    setSponsorImage1Preview(sponsorImage1);
+    if (sponsorImage1 && sponsorImage1.length > 0) {
+      const file = sponsorImage1[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSponsorImage1Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setSponsorImage1Preview(null);
+    }
   }, [sponsorImage1]);
 
   useEffect(() => {
-    setSponsorImage2Preview(sponsorImage2);
+    if (sponsorImage2 && sponsorImage2.length > 0) {
+      const file = sponsorImage2[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSponsorImage2Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setSponsorImage2Preview(null);
+    }
   }, [sponsorImage2]);
 
   useEffect(() => {

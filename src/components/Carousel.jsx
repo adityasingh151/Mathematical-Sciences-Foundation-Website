@@ -59,7 +59,7 @@ const Carousel = () => {
         }}
         navigation={true}
         className="mySwiper"
-        style={{ width: '100%', height: '600px' }} // Height can be adjusted as needed
+        style={{ width: '100%', height: '700px' }} // Height can be adjusted as needed
       >
         {images.map((image, index) => (
           <SwiperSlide key={index}>
