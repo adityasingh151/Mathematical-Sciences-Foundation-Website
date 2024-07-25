@@ -9,6 +9,8 @@ function People() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const defaultImage = "https://via.placeholder.com/150?text=No+Image+Available";
+
     useEffect(() => {
         const db = getDatabase();
         const sectionsRef = ref(db, 'people');
@@ -52,7 +54,7 @@ function People() {
     };
 
     if (loading) {
-        return <Loading/>;
+        return <Loading />;
     }
 
     if (error) {
@@ -77,7 +79,7 @@ function People() {
                     </div>
                 </div>
 
-                {/* Collapseable section for different members. */}
+                {/* Collapsible section for different members */}
                 {sections.map((section, index) => (
                     <div key={section.key} className="mb-5">
                         <button
@@ -98,7 +100,7 @@ function People() {
                                         >
                                             <img
                                                 className="w-fit h-fit mx-auto object-cover rounded-xl md:w-48 md:h-64 lg:w-64 lg:h-80"
-                                                src={member.photoUrl}
+                                                src={member.photoUrl || defaultImage}
                                                 alt={member.name}
                                                 loading="lazy"
                                             />

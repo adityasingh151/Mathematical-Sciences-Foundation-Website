@@ -3,6 +3,7 @@ import { getDatabase, ref, onValue, off, remove } from "firebase/database";
 import { getStorage, ref as storageRef, deleteObject } from "firebase/storage";
 import Modal from '../../Modal'; // Import the modal component
 import NotificationForm from '../inputForms/NotificationForm'; // Import the NotificationForm component
+import dayjs from 'dayjs';
 
 const ViewNotifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -20,8 +21,10 @@ const ViewNotifications = () => {
       const data = snapshot.val() || {};
       const loadedNotifications = Object.keys(data).map(key => ({
         id: key,
-        ...data[key]
+        ...data[key],
+        timestamp: dayjs(data[key].timestamp) // Assuming timestamp is stored in the notifications
       }));
+      loadedNotifications.sort((a, b) => b.timestamp - a.timestamp); // Sort by newest first
       setNotifications(loadedNotifications);
       setIsLoading(false);
     }, (error) => {
@@ -68,8 +71,10 @@ const ViewNotifications = () => {
       const data = snapshot.val() || {};
       const loadedNotifications = Object.keys(data).map(key => ({
         id: key,
-        ...data[key]
+        ...data[key],
+        timestamp: dayjs(data[key].timestamp)
       }));
+      loadedNotifications.sort((a, b) => b.timestamp - a.timestamp);
       setNotifications(loadedNotifications);
       setIsLoading(false);
     }, (error) => {
@@ -97,8 +102,11 @@ const ViewNotifications = () => {
         />
       </Modal>
       <h1 className="text-2xl font-bold mb-4">Notifications</h1>
-      {notifications.map(notification => (
-        <div key={notification.id} className="border p-4 rounded mb-2 flex justify-between items-center">
+      {notifications.map((notification, index) => (
+        <div key={notification.id} className="relative border p-4 rounded mb-2 flex justify-between items-center">
+          {index < 3 && (
+            <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">Latest</span>
+          )}
           <div>
             <h2 className="text-xl font-semibold">{notification.heading}</h2>
             <p className="text-sm">Date: {notification.date}</p>

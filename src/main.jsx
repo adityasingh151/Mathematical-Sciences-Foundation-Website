@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -46,6 +46,10 @@ import ViewNotifications from './components/dashBoard/viewComponents/ViewNotific
 import ReviewForm from './components/dashBoard/inputForms/ReviewForm';
 import ViewReviews from './components/dashBoard/viewComponents/ViewReviews'
 import NotFoundPage from './components/NotFoundPage';
+import Latest from './components/Latest';
+import DisplayContent from './components/DisplayContent'
+import SponsorsImageForm from './components/dashBoard/inputForms/SponsorsImageForm';
+import ViewSponsors from './components/dashBoard/viewComponents/ViewSponsors';
 
 const router = createBrowserRouter([
   {
@@ -72,7 +76,10 @@ const router = createBrowserRouter([
           { path: "workshop/:workshopId", element: <WorkshopPage /> },
           { path: "event/:eventId", element: <EventPage /> },
           { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
-          { path: 'forms/carousel', element: <CarouselImageForm /> },
+          { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
+          { path: 'gallery', element: <DisplayContent /> },
+          { path: 'latest', element: <Latest /> },
+          // { path: 'forms/carousel', element: <CarouselImageForm /> },
           { path: 'admin/login', element: <AdminLogin /> },
         ],
       },
@@ -90,17 +97,19 @@ const router = createBrowserRouter([
               { path: 'forms/course2', element: <CourseForm2 /> },
               { path: 'forms/courses', element: <CoursesForm /> },
               { path: 'forms/event', element: <EventForm /> },
+              { path: 'forms/sponsors', element: <SponsorsImageForm /> },
               { path: 'forms/event/edit/:eventId', element: <EventForm /> },
               { path: "forms/image/edit/:contentId", element: <ContentForm /> },
               { path: "forms/video/edit/:contentId", element: <ContentForm /> },
               { path: "forms/article/edit/:contentId", element: <ContentForm /> },
+              { path: "forms/sponsors/edit/:sponsorId", element: <SponsorsImageForm /> },
               { path: 'forms/people', element: <PeopleForm /> },
               { path: 'forms/people/edit/:personId', element: <PeopleForm /> },
               { path: 'view/people', element: <ViewPeople /> },
               { path: 'forms/workshop', element: <WorkshopForm /> },
               { path: 'forms/carousel', element: <CarouselImageForm /> },
               { path: "forms/gallery", element: <ContentForm /> },
-              { path: "forms/notification", element: <NotificationForm /> },
+              { path: "forms/notification", element: <NotificationForm onSave={() => {}} /> },
               { path: 'view/courses', element: <ViewCourses /> },
               { path: "view/gallery", element: <ViewContent /> },
               { path: "view/notification", element: <ViewNotifications /> },
@@ -110,6 +119,7 @@ const router = createBrowserRouter([
               { path: 'view/events', element: <ViewEvent /> },
               { path: 'view/workshops', element: <ViewWorkshops /> },
               { path: 'forms/workshop/edit/:workshopId', element: <WorkshopForm /> },
+              { path: 'view/sponsors', element: <ViewSponsors /> },
               { path: 'view/carousel', element: <ViewCarousel /> },
               { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
               { path: 'view/courses/college', element: <ViewCoursePage2 /> },

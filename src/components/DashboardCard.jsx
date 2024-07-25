@@ -72,6 +72,12 @@ const DashboardCard = () => {
           >
             Add Notifications
           </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/sponsors')}
+            className="card cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-amber-600"
+          >
+            Add Sponsors
+          </div>
 
           <div 
             onClick={() => handleNavigation('/admin/forms/testimonials')}
@@ -139,6 +145,12 @@ const DashboardCard = () => {
             className="card cursor-pointer bg-gradient-to-r from-cyan-500 to-cyan-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-cyan-600"
           >
             View Notifications
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/view/sponsors')}
+            className="card cursor-pointer bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-blue-600"
+          >
+            View Sponsors
           </div>
           <div 
             onClick={() => handleNavigation('/admin/view/testimonials')}

@@ -6,8 +6,9 @@ import Loading from '../../LoadSaveAnimation/Loading';
 import Saving from '../../LoadSaveAnimation/Saving';
 import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
+import dayjs from 'dayjs';
 
-const NotificationForm = ({ existingData, onSave }) => {
+const NotificationForm = ({ existingData, onSave = () => {} }) => {
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     defaultValues: {
       heading: existingData ? existingData.heading : '',
@@ -43,12 +44,15 @@ const NotificationForm = ({ existingData, onSave }) => {
 
   const onSubmit = async (data) => {
     setIsSaving(true);
+    setShowSuccess(false);
+    setShowError(false);
     try {
       const file = data.pdfFile[0];
       const storageReference = storageRef(getStorage(), `notifications/${file.name}`);
       await uploadBytes(storageReference, file);
       const downloadURL = await getDownloadURL(storageReference);
       const { formattedDate, formattedYear } = getCurrentDate();
+      const timestamp = dayjs().toISOString(); // Save the current timestamp
       const notificationRef = existingData
         ? ref(getDatabase(), `notifications/${existingData.id}`)
         : ref(getDatabase(), 'notifications');
@@ -56,16 +60,18 @@ const NotificationForm = ({ existingData, onSave }) => {
         heading: data.heading,
         pdfUrl: downloadURL,
         date: formattedDate,
-        year: formattedYear
+        year: formattedYear,
+        timestamp: timestamp // Add timestamp to the notification data
       };
 
       if (existingData) {
         await update(notificationRef, notificationData);
+        setShowSuccess(true);
       } else {
         await push(notificationRef, notificationData);
+        setShowSuccess(true);
       }
 
-      setShowSuccess(true);
       onSave();
     } catch (error) {
       console.error('Error uploading PDF: ', error);
@@ -82,13 +88,17 @@ const NotificationForm = ({ existingData, onSave }) => {
   return (
     <>
       {isSaving && <Saving />}
-      <form onSubmit={handleSubmit(onSubmit)} className="p-6 bg-white shadow-lg rounded-lg">
+      <form onSubmit={handleSubmit(onSubmit)} className="p-6 bg-white shadow-lg rounded-lg relative">
         <h2 className="text-2xl font-bold text-indigo-600 mb-4">{existingData ? 'Edit Notification' : 'Upload Notification PDF'}</h2>
         {showSuccess && (
-          <SuccessNotification message="PDF uploaded successfully!" onClose={() => setShowSuccess(false)} />
+          <div className="fixed top-0 left-1/2 transform -translate-x-1/2">
+            <SuccessNotification message="PDF uploaded successfully!" onClose={() => setShowSuccess(false)} />
+          </div>
         )}
         {showError && (
-          <ErrorNotification message="Failed to upload PDF!" onClose={() => setShowError(false)} />
+          <div className="fixed top-0 left-1/2 transform -translate-x-1/2">
+            <ErrorNotification message="Failed to upload PDF!" onClose={() => setShowError(false)} />
+          </div>
         )}
         <div className="my-4">
           <label className="block text-base font-medium text-gray-700">

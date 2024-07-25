@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { getDatabase, ref, onValue, off, remove } from "firebase/database";
 import { getStorage, ref as storageRef, deleteObject } from "firebase/storage";
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import Modal from '../../Modal'; // Assuming Modal is in the same directory
 
 const ViewCarousel = () => {
@@ -68,25 +63,11 @@ const ViewCarousel = () => {
           Delete Image
         </button>
       </Modal>
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={30}
-        centeredSlides={true}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
-        className="mySwiper"
-        style={{ width: '100%', height: '600px' }}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {images.map((image) => (
-          <SwiperSlide key={image.id}>
+          <div key={image.id} className="relative">
             <div
-              className="relative h-full w-full"
+              className="h-80 w-full bg-cover bg-center"
               style={{
                 backgroundImage: `url(${image.url})`,
                 backgroundSize: 'cover',
@@ -95,21 +76,19 @@ const ViewCarousel = () => {
               }}
             >
               <div className="absolute inset-0 bg-black opacity-25"></div>
-              <div className="absolute inset-0 flex flex-col justify-between p-4">
-                <div className="flex justify-end">
+              <div className="absolute inset-0 flex flex-col justify-end p-4">
+                <div className="flex justify-center mb-4">
                   <button className="text-white bg-red-600 hover:bg-red-700 p-2 rounded" onClick={() => confirmDelete(image)}>
                     Delete
                   </button>
                 </div>
-                <p className="text-center text-white text-2xl font-bold">Slide</p>
               </div>
             </div>
-          </SwiperSlide>
+          </div>
         ))}
-      </Swiper>
+      </div>
     </div>
   );
-  
 };
 
 export default ViewCarousel;

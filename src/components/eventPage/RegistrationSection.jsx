@@ -20,7 +20,7 @@ const RegistrationSection = React.forwardRef(({ title, details, buttonText, onBu
           </h2>
           {details.map((detail, index) => (
             <p key={index} className="text-lg leading-relaxed text-gray-700 mb-4">
-              <strong>{detail.label}:</strong> 
+              <strong>{detail.label}: </strong> 
               <span dangerouslySetInnerHTML={createMarkup(detail.value)} />
             </p>
           ))}

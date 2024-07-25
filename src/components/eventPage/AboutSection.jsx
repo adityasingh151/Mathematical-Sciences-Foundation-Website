@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-const AboutSection = React.forwardRef(({ title, content, imageUrl }, ref) => {
+const AboutSection = React.forwardRef(({ content, imageUrl }, ref) => {
   return (
     <section
       ref={ref}
@@ -12,7 +12,7 @@ const AboutSection = React.forwardRef(({ title, content, imageUrl }, ref) => {
         <div className="flex flex-wrap items-center">
           <div className="w-full md:w-1/2 p-4">
             <h2 className="text-3xl font-bold text-indigo-600 mb-6">
-              {title}
+              About this Event
             </h2>
             <p className="text-lg leading-relaxed">
               {content}

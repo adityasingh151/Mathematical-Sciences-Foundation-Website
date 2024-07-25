@@ -17,10 +17,10 @@ const ViewEvent = () => {
 
     onValue(eventRef, (snapshot) => {
       const data = snapshot.val();
-      const loadedEvents = Object.keys(data).map(key => ({
+      const loadedEvents = data ? Object.keys(data).map(key => ({
         id: key,
         ...data[key]
-      }));
+      })) : [];
       setEvents(loadedEvents);
       setIsLoading(false);
     }, {
@@ -45,28 +45,39 @@ const ViewEvent = () => {
     setShowModal(true);
   };
 
-const handleEdit = (event) => {
-  window.location.href = `/forms/event/edit/${event.id}`; // Direct navigation to edit route
-};
+  const handleEdit = (event) => {
+    window.location.href = `/admin/forms/event/edit/${event.id}`; // Direct navigation to edit route
+  };
 
-
-  if (isLoading) return <div>Loading events...</div>;
+  if (isLoading) return <div className="text-center mt-8">Loading events...</div>;
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-xl font-bold mb-4">Events</h1>
-      {events.map(event => (
-        <div key={event.id} className="p-4 border rounded mb-2 flex justify-between items-center">
-          <div>
-            <h2 className="font-semibold">{event.headerTitle}</h2>
-            <p>{event.aboutTitle}</p>
+      <h1 className="text-3xl font-bold mb-8 text-center">Events</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {events.map(event => (
+          <div key={event.id} className="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold mb-2 text-gray-800">{event.headerTitle}</h2>
+              <p className="text-gray-600">{event.aboutDescription}</p>
+            </div>
+            <div className="mt-4 flex justify-end space-x-2">
+              <button
+                onClick={() => handleEdit(event)}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => promptDelete(event)}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+              >
+                Delete
+              </button>
+            </div>
           </div>
-          <div>
-            <button onClick={() => promptDelete(event)} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded mr-2">Delete</button>
-            <button onClick={() => handleEdit(event)} className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Edit</button>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       <Modal
         isOpen={showModal}
@@ -74,9 +85,19 @@ const handleEdit = (event) => {
         onClose={() => setShowModal(false)}
       >
         <p>{modalContent}</p>
-        <div className="mt-4 flex justify-end">
-          <button onClick={handleDelete} className="bg-red-600 hover:bg-red-800 text-white py-1 px-3 rounded mr-2">Confirm</button>
-          <button onClick={() => setShowModal(false)} className="bg-gray-300 hover:bg-gray-400 text-black py-1 px-3 rounded">Cancel</button>
+        <div className="mt-4 flex justify-end space-x-2">
+          <button
+            onClick={handleDelete}
+            className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded transition duration-300"
+          >
+            Confirm
+          </button>
+          <button
+            onClick={() => setShowModal(false)}
+            className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded transition duration-300"
+          >
+            Cancel
+          </button>
         </div>
       </Modal>
 
