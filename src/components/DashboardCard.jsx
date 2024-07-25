@@ -7,7 +7,6 @@ const DashboardCard = () => {
   const handleNavigation = (path) => {
     navigate(path);
   };
-  
 
   return (
     <div className="mt-6">
@@ -78,13 +77,13 @@ const DashboardCard = () => {
           >
             Add Sponsors
           </div>
-
           <div 
             onClick={() => handleNavigation('/admin/forms/testimonials')}
             className="card cursor-pointer bg-gradient-to-r from-purple-500 to-purple-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-purple-600"
           >
             Add Testimonials
           </div>
+         
         </div>
       </div>
 
@@ -157,6 +156,24 @@ const DashboardCard = () => {
             className="card cursor-pointer bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-blue-600"
           >
             View Testimonials
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/startup')}
+            className="card cursor-pointer bg-gradient-to-r from-green-500 to-green-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-green-600"
+          >
+            View Startup College
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/internetCollege')}
+            className="card cursor-pointer bg-gradient-to-r from-green-500 to-green-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-green-600"
+          >
+            View Internet College
+          </div>
+          <div 
+            onClick={() => handleNavigation('/admin/forms/engineeringKitchen')}
+            className="card cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-amber-600"
+          >
+            View Engineering Kitchen
           </div>
         </div>
       </div>
