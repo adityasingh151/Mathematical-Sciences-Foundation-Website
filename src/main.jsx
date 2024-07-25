@@ -50,6 +50,12 @@ import Latest from './components/Latest';
 import DisplayContent from './components/DisplayContent'
 import SponsorsImageForm from './components/dashBoard/inputForms/SponsorsImageForm';
 import ViewSponsors from './components/dashBoard/viewComponents/ViewSponsors';
+import Initiative2Form from './components/dashBoard/inputForms/Initiative2Form';
+import Initiative2Page from './components/Initiative2Page';
+import Initiative1Page from './components/Initiative1Page';
+import Initiative1Form from './components/dashBoard/inputForms/Initiative1Form';
+import Initiative3Page from './components/Initiative3Page'
+import Initiative3Form from './components/dashBoard/inputForms/Initiative3Form';
 
 const router = createBrowserRouter([
   {
@@ -79,7 +85,9 @@ const router = createBrowserRouter([
           { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
           { path: 'gallery', element: <DisplayContent /> },
           { path: 'latest', element: <Latest /> },
-          // { path: 'forms/carousel', element: <CarouselImageForm /> },
+          { path: '/initiatives/startup' , element: <Initiative2Page/>},
+          { path: '/initiatives/internetCollege' , element: <Initiative1Page/>},
+          { path: '/initiatives/internetCollege/engineeringKitchen' , element: <Initiative3Page/>},
           { path: 'admin/login', element: <AdminLogin /> },
         ],
       },
@@ -124,6 +132,9 @@ const router = createBrowserRouter([
               { path: 'view/courses/teachers', element: <ViewCoursePage1 /> },
               { path: 'view/courses/college', element: <ViewCoursePage2 /> },
               { path: 'view/testimonials', element: <ViewReviews /> },
+              { path: 'forms/startup', element: <Initiative2Form /> },
+              { path: 'forms/internetCollege', element: <Initiative1Form /> },
+              { path: 'forms/engineeringKitchen', element: <Initiative3Form /> },
             ],
           },
         ],

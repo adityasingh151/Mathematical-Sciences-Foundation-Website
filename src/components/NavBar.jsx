@@ -29,7 +29,7 @@ const Navbar = () => {
     });
   }, []);
 
-  //For events
+  // For events
   useEffect(() => {
     const db = getDatabase();
     const eventsRef = ref(db, "events");
@@ -61,8 +61,14 @@ const Navbar = () => {
       name: "Initiatives",
       path: "/initiatives",
       dropdown: [
-        { name: "Initiative 1", path: "/initiatives/1" },
-        { name: "Initiative 2", path: "/initiatives/2" },
+        {
+          name: "The Internet College",
+          path: "/initiatives/internetCollege",
+          subDropdown: [
+            { name: "Engineering Kitchen", path: "/initiatives/internetCollege/engineeringKitchen" },
+          ],
+        },
+        { name: "The College of Startups", path: "/initiatives/startup" },
       ],
     },
     {
@@ -146,17 +152,35 @@ const Navbar = () => {
                   </NavLink>
                   <div className="w-fit absolute hidden group-hover:block bg-white shadow-md rounded-md mt-0 z-50">
                     {item.dropdown.map((subItem, subIndex) => (
-                      <NavLink
-                        key={subIndex}
-                        to={subItem.path}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "block px-4 py-2 text-blue-500 hover:bg-gray-200 text-center rounded-md"
-                            : "block px-4 py-2 text-gray-700 hover:bg-gray-200 text-center rounded-md"
-                        }
-                      >
-                        {subItem.name}
-                      </NavLink>
+                      <div key={subIndex} className="relative group">
+                        <NavLink
+                          to={subItem.path}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "block px-4 py-2 text-blue-500 hover:bg-gray-200 text-center rounded-md"
+                              : "block px-4 py-2 text-gray-700 hover:bg-gray-200 text-center rounded-md"
+                          }
+                        >
+                          {subItem.name}
+                        </NavLink>
+                        {subItem.subDropdown && (
+                          <div className="absolute left-full top-0 w-fit hidden group-hover:block bg-white shadow-md rounded-md mt-0 z-50">
+                            {subItem.subDropdown.map((nestedItem, nestedIndex) => (
+                              <NavLink
+                                key={nestedIndex}
+                                to={nestedItem.path}
+                                className={({ isActive }) =>
+                                  isActive
+                                    ? "block px-4 py-2 text-blue-500 hover:bg-gray-200 text-center rounded-md"
+                                    : "block px-4 py-2 text-gray-700 hover:bg-gray-200 text-center rounded-md"
+                                }
+                              >
+                                {nestedItem.name}
+                              </NavLink>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     ))}
                   </div>
                 </div>
