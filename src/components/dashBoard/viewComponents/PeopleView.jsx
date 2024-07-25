@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue, off, remove } from "firebase/database";
 import { getStorage, ref as storageRef, deleteObject } from "firebase/storage";
 import Modal from '../../Modal'; // Import the modal component
+import Loading from '../../LoadSaveAnimation/Loading';
 
 const PeopleView = () => {
   const [people, setPeople] = useState([]);
@@ -51,7 +52,7 @@ const PeopleView = () => {
     setModalOpen(true);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading/>;
   if (error) return <div>Error: {error}</div>;
 
   return (

@@ -3,6 +3,7 @@ import { getDatabase, ref, onValue, off, remove } from "firebase/database";
 import { getStorage, ref as storageRef, deleteObject } from "firebase/storage";
 import Modal from '../../Modal'; // Import the modal component
 import { useNavigate } from 'react-router-dom';
+import Loading from '../../LoadSaveAnimation/Loading';
 
 const ViewPeople = () => {
   const [people, setPeople] = useState([]);
@@ -52,7 +53,7 @@ const ViewPeople = () => {
     navigate(`/admin/forms/people/edit/${person.id}`);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading/>;
   if (error) return <div>Error: {error}</div>;
 
   return (

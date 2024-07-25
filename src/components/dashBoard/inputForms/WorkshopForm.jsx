@@ -9,13 +9,13 @@ import Saving from '../../LoadSaveAnimation/Saving';
 import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
 import { imgdb } from '../../databaseConfig/firebaseConfig'; // Import your Firebase configuration
+import moment from 'moment';
 
 const WorkshopForm = () => {
   const { register, handleSubmit, setValue, watch, formState: { errors }, control } = useForm();
   const { workshopId } = useParams();
   const [fields, setFields] = useState([
     'headerTitle',
-    'aboutTitle',
     'aboutDescription',
     'aboutImage'
   ]);
@@ -26,6 +26,13 @@ const WorkshopForm = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [activeSections, setActiveSections] = useState({
+    headerSection: true,
+    reachSection: false,
+    outcomesSection: false,
+    quoteSection: false,
+    registrationSection: false,
+  });
 
   useEffect(() => {
     if (workshopId) {
@@ -66,27 +73,60 @@ const WorkshopForm = () => {
     return downloadURL;
   };
 
+  const extractEmbedId = (iframeString) => {
+    const regex = /<iframe.*?src=".*?\/embed\?pb=(.*?)".*?><\/iframe>/;
+    const match = iframeString.match(regex);
+    return match ? match[1] : iframeString;
+  };
+
   const onSubmit = async (data) => {
     setIsSaving(true);
     try {
       let downloadURL = data.aboutImage;
-
+  
       if (data.aboutImage && data.aboutImage[0] instanceof File) {
         downloadURL = await uploadImage(data.aboutImage[0], `workshops/${data.aboutImage[0].name}`);
       }
-
+  
+      const addressEmbedId = activeSections.reachSection ? extractEmbedId(data.addressURL) : "";
+  
       const workshopData = {
-        ...data,
-        aboutImage: downloadURL
+        ...(activeSections.headerSection && {
+          headerTitle: data.headerTitle || "",
+          aboutDescription: data.aboutDescription || "",
+          aboutImage: downloadURL || ""
+        }),
+        ...(activeSections.reachSection && {
+          address: data.address || "",
+          addressURL: addressEmbedId || ""
+        }),
+        ...(activeSections.outcomesSection && {
+          outcomeContent: data.outcomeContent || ""
+        }),
+        ...(activeSections.quoteSection && {
+          quote: data.quote || ""
+        }),
+        ...(activeSections.registrationSection && {
+          workshopDate: data.workshopDate ? moment(data.workshopDate).format('DD MMMM, YYYY') : "",
+          workshopStartTime: data.workshopStartTime ? moment(data.workshopStartTime, 'HH:mm').format('hh:mm A') : "",
+          workshopEndTime: data.workshopEndTime ? moment(data.workshopEndTime, 'HH:mm').format('hh:mm A') : "",
+          prerequisites: data.prerequisites || "",
+          designedFor: data.designedFor || "",
+          lastDateForRegistration: data.lastDateForRegistration || "",
+          workshopRegistrationFee: data.workshopRegistrationFee || "",
+          registrationLink: data.registrationLink || ""
+        })
       };
-
+  
       const db = getDatabase();
       if (workshopId) {
+        console.log(workshopData);
         await update(ref(db, `workshops/${workshopId}`), workshopData);
       } else {
+        console.log(workshopData);
         await push(ref(db, 'workshops'), workshopData);
       }
-
+  
       setShowSuccess(true);
     } catch (error) {
       console.error('Error adding/updating workshop data:', error);
@@ -96,20 +136,16 @@ const WorkshopForm = () => {
     }
   };
 
-  const toggleFields = (fieldArray) => {
-    const currentFieldSet = new Set(fields);
-    const hasAllFields = fieldArray.every(field => currentFieldSet.has(field));
-
-    if (hasAllFields) {
-      setFields(fields.filter(field => !fieldArray.includes(field)));
-    } else {
-      setFields([...fields, ...fieldArray.filter(field => !currentFieldSet.has(field))]);
-    }
+  const toggleSection = (section) => {
+    setActiveSections((prevSections) => ({
+      ...prevSections,
+      [section]: !prevSections[section],
+    }));
   };
 
   useEffect(() => {
-    register('aboutImage', { required: 'This field is required' });
-  }, [register]);
+    register('aboutImage', { required: activeSections.headerSection && 'This field is required' });
+  }, [register, activeSections.headerSection]);
 
   const getInputType = (fieldName) => {
     if (fieldName.includes('Date')) return 'date';
@@ -118,11 +154,20 @@ const WorkshopForm = () => {
   };
 
   const sectionFields = {
-    headerSection: ['headerSubtitle'],
+    headerSection: ['headerTitle', 'aboutDescription', 'aboutImage'],
     reachSection: ['address', 'addressURL'],
-    outcomesSection: ['outcomeTitle', 'outcomeContent'],
+    outcomesSection: ['outcomeContent'],
     quoteSection: ['quote'],
-    registrationSection: ['workshopDate', 'workshopStartTime', 'workshopEndTime', 'prerequisites', 'designedFor', 'lastDateForRegistration', 'workshopRegistrationFee']
+    registrationSection: [
+      'workshopDate',
+      'workshopStartTime',
+      'workshopEndTime',
+      'prerequisites',
+      'designedFor',
+      'lastDateForRegistration',
+      'workshopRegistrationFee',
+      'registrationLink'
+    ]
   };
 
   if (isLoading) {
@@ -137,10 +182,10 @@ const WorkshopForm = () => {
           {Object.entries(sectionFields).map(([section, fieldArray]) => (
             <button
               key={section}
-              onClick={() => toggleFields(fieldArray)}
-              className={`text-sm py-2 px-4 rounded transition duration-300 flex items-center gap-2 ${fields.some(field => fieldArray.includes(field)) ? 'bg-red-500 hover:bg-red-700' : 'bg-blue-500 hover:bg-blue-700'} text-white`}
+              onClick={() => toggleSection(section)}
+              className={`text-sm py-2 px-4 rounded transition duration-300 flex items-center gap-2 ${activeSections[section] ? 'bg-red-500 hover:bg-red-700' : 'bg-blue-500 hover:bg-blue-700'} text-white`}
             >
-              <BsPlusCircle /> {fields.some(field => fieldArray.includes(field)) ? 'Remove' : 'Add'} {section.replace(/([A-Z])/g, ' $1').replace("section", " Section")}
+              <BsPlusCircle /> {activeSections[section] ? 'Remove' : 'Add'} {section.replace(/([A-Z])/g, ' $1').replace("Section", " Section")}
             </button>
           ))}
         </div>
@@ -158,57 +203,72 @@ const WorkshopForm = () => {
               onClose={() => setShowError(false)}
             />
           )}
-          {fields.map(field => (
-            <div key={field} className="relative">
-              <label className="block text-sm font-medium text-gray-700 capitalize">
-                {field.replace(/([A-Z])/g, ' $1')}
-                {['headerSubtitle', 'outcomeTitle', 'outcomeContent', 'quote'].includes(field) ? null : <span className="text-red-500">*</span>}
-              </label>
-              {field === 'aboutImage' ? (
-                <Controller
-                  name="aboutImage"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: 'This field is required' }}
-                  render={({ field: { onChange, value } }) => (
-                    <div>
-                      <input
-                        type="file"
-                        onChange={(e) => {
-                          onChange(e.target.files);
-                          if (e.target.files.length > 0) {
-                            const fileReader = new FileReader();
-                            fileReader.onload = (event) => setImagePreview(event.target.result);
-                            fileReader.readAsDataURL(e.target.files[0]);
-                          } else {
-                            setImagePreview(null);
-                          }
-                        }}
-                        className="mt-1 block w-full pl-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                      {imagePreview && <img src={imagePreview} alt="Preview" className="mt-4 h-48 w-auto border rounded-md mx-auto" />}
-                    </div>
-                  )}
-                />
-              ) : (
-                <input
-                  type={getInputType(field)}
-                  {...register(field, {
-                    required: ['headerSubtitle', 'outcomeTitle', 'outcomeContent', 'quote'].includes(field) ? false : 'This field is required',
-                    minLength: {
-                      value: 3,
-                      message: 'Minimum length is 3 characters'
-                    }
-                  })}
-                  className={`mt-1 block w-full pl-3 pr-12 py-2 border ${errors[field] ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                  placeholder={`Enter ${field.replace(/([A-Z])/g, ' $1')}`}
-                />
-              )}
-              {errors[field] && (
-                <p className="mt-1 text-sm text-red-500">{errors[field].message}</p>
-              )}
-            </div>
-          ))}
+          {Object.entries(sectionFields).map(([section, fieldArray]) =>
+            activeSections[section] && fieldArray.map(field => (
+              <div key={field} className="relative">
+                <label className="block text-sm font-medium text-gray-700 capitalize">
+                  {field.replace(/([A-Z])/g, ' $1')}
+                  {['headerSubtitle', 'outcomeContent', 'quote', 'prerequisites', 'designedFor', 'lastDateForRegistration'].includes(field) ? null : <span className="text-red-500">*</span>}
+                </label>
+                {field === 'aboutDescription' ? (
+                  <textarea
+                    {...register(field, {
+                      required: activeSections.headerSection && 'This field is required',
+                      minLength: {
+                        value: 3,
+                        message: 'Minimum length is 3 characters'
+                      }
+                    })}
+                    className={`mt-1 block w-full pl-3 pr-12 py-2 border ${errors[field] ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                    rows="5"
+                    placeholder={`Enter ${field.replace(/([A-Z])/g, ' $1')}`}
+                  />
+                ) : field === 'aboutImage' ? (
+                  <Controller
+                    name="aboutImage"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: activeSections.headerSection && 'This field is required' }}
+                    render={({ field: { onChange, value } }) => (
+                      <div>
+                        <input
+                          type="file"
+                          onChange={(e) => {
+                            onChange(e.target.files);
+                            if (e.target.files.length > 0) {
+                              const fileReader = new FileReader();
+                              fileReader.onload = (event) => setImagePreview(event.target.result);
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            } else {
+                              setImagePreview(null);
+                            }
+                          }}
+                          className="mt-1 block w-full pl-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                        {imagePreview && <img src={imagePreview} alt="Preview" className="mt-4 h-48 w-auto border rounded-md mx-auto" />}
+                      </div>
+                    )}
+                  />
+                ) : (
+                  <input
+                    type={getInputType(field)}
+                    {...register(field, {
+                      required: activeSections.headerSection && 'This field is required',
+                      minLength: {
+                        value: field.includes('Fee') ? 0 : 3,
+                        message: 'Minimum length is 3 characters'
+                      }
+                    })}
+                    className={`mt-1 block w-full pl-3 pr-12 py-2 border ${errors[field] ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                    placeholder={`Enter ${field.replace(/([A-Z])/g, ' $1')}`}
+                  />
+                )}
+                {errors[field] && (
+                  <p className="mt-1 text-sm text-red-500">{errors[field].message}</p>
+                )}
+              </div>
+            ))
+          )}
           <button type="submit" className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
             {workshopId ? 'Update Workshop Details' : 'Submit Workshop Details'}
           </button>
@@ -219,4 +279,3 @@ const WorkshopForm = () => {
 };
 
 export default WorkshopForm;
-  

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue, remove } from "firebase/database";
 import Modal from '../../Modal'; // Assuming Modal is a reusable component
 import Notification from '../../Notification'; // Import the Notification component
+import Loading from '../../LoadSaveAnimation/Loading';
 
 const ViewEvent = () => {
   const [events, setEvents] = useState([]);
@@ -49,7 +50,7 @@ const ViewEvent = () => {
     window.location.href = `/admin/forms/event/edit/${event.id}`; // Direct navigation to edit route
   };
 
-  if (isLoading) return <div className="text-center mt-8">Loading events...</div>;
+  if (isLoading) return <Loading/>;
 
   return (
     <div className="container mx-auto p-4">

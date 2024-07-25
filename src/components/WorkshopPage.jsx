@@ -69,32 +69,44 @@ const WorkshopPage = () => {
 
   return (
     <div className="font-lato text-gray-900 bg-gradient-to-r from-cyan-50 to-blue-100">
+      {workshopData.headerTitle && 
       <HeaderSection
-        ref={sectionRefs.header}
-        title={workshopData.headerTitle}
-        subtitle={workshopData.headerSubtitle}
-        buttonText="Register Now"
-        onButtonClick={() => window.location.href = '#registration'}
+      ref={sectionRefs.header}
+      title={workshopData.headerTitle}
+      subtitle={workshopData.headerSubtitle}
+      buttonText="Register Now"
+      onButtonClick={() => window.location.href = '#registration'}
       />
+    }
+    {
+      workshopData.aboutDescription &&
       <AboutSection
-        ref={sectionRefs.about}
-        title={workshopData.aboutTitle}
-        content={workshopData.aboutDescription}
-        imageUrl={workshopData.aboutImage}
+      ref={sectionRefs.about}
+      title={workshopData.aboutTitle}
+      content={workshopData.aboutDescription}
+      imageUrl={workshopData.aboutImage}
       />
+    }
+    {workshopData.outcomeContent && 
+    
       <OutcomesSection
-        ref={sectionRefs.outcomes}
-        title={workshopData.outcomeTitle}
-        content={workshopData.outcomeContent}
+      ref={sectionRefs.outcomes}
+      title={workshopData.outcomeTitle}
+      content={workshopData.outcomeContent}
       />
+    }
+    {workshopData.quote && 
       <QuoteSection
-        ref={sectionRefs.quote}
-        quote={workshopData.quote}
+      ref={sectionRefs.quote}
+      quote={workshopData.quote}
       />
+    }
+
+    {workshopData.workshopDate && 
       <RegistrationSection
-        ref={sectionRefs.registration}
-        title="Register for the Workshop"
-        details={[
+      ref={sectionRefs.registration}
+      title="Register for the Workshop"
+      details={[
           { label: 'Date', value: workshopData.workshopDate },
           { label: 'Time', value: `${workshopData.workshopStartTime} - ${workshopData.workshopEndTime}` },
           { label: 'Prerequisite', value: workshopData.prerequisites },
@@ -104,11 +116,14 @@ const WorkshopPage = () => {
         registrationInfo={workshopData.registrationInfo}
         buttonText="Register Now"
         onButtonClick={() => window.location.href = '#registration'}
-      />
+        />
+      }
+      {workshopData.address && 
       <HowToReach
-        ref={sectionRefs.directions}
-        location={{ name: workshopData.address, embedParams: workshopData.addressURL }}
+      ref={sectionRefs.directions}
+      location={{ name: workshopData.address, embedParams: workshopData.addressURL }}
       />
+    }
     </div>
   );
 };
