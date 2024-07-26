@@ -21,13 +21,13 @@ const DashboardCard = () => {
             onClick={() => handleNavigation('/admin/forms/course1')}
             className="card cursor-pointer bg-gradient-to-r from-indigo-500 to-indigo-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-indigo-600"
           >
-            Add Course 1
+            Add Students Courses
           </div>
           <div 
             onClick={() => handleNavigation('/admin/forms/course2')}
             className="card cursor-pointer bg-gradient-to-r from-pink-500 to-pink-400 text-white shadow-lg rounded-lg p-6 text-center transition duration-300 ease-in-out hover:bg-pink-600"
           >
-            Add Course 2
+            Add Teachers Courses
           </div>
           <div 
             onClick={() => handleNavigation('/admin/forms/courses')}

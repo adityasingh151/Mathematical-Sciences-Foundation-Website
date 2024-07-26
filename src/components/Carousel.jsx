@@ -45,7 +45,7 @@ const Carousel = () => {
   }
 
   return (
-    <div className="mx-auto py-1">
+    <div className="mx-auto py-1 rounded-md">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
@@ -58,8 +58,8 @@ const Carousel = () => {
           clickable: true,
         }}
         navigation={true}
-        className="mySwiper"
-        style={{ width: '100%', height: '700px' }} // Height can be adjusted as needed
+        className="mySwiper rounded-md shadow-md"
+        style={{ width: '98%', height: '550px' }} // Height can be adjusted as needed
       >
         {images.map((image, index) => (
           <SwiperSlide key={index}>

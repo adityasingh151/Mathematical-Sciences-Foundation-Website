@@ -36,7 +36,6 @@ function Home() {
       <SponsorsSection />
       <WorksSection />
       <ReviewsDisplay/>
-      <ContactArea />
     </>
   );
 }

@@ -37,7 +37,7 @@ const coursesForTeachers = [
   {
     title: 'Practicals on Applied Mathematics Using Spreadsheets',
     description: 'Learn practical applications of mathematics using spreadsheets. This course focuses on applying mathematical concepts through practical exercises, enhancing teaching methodologies with hands-on learning.',
-    imgSrc: 'https://cdn1.iconfinder.com/data/icons/education-137/64/Online-Course-Study-512.png',
+    imgSrc: 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
     link: 'https://mathscifound.org/online-courses/school-teachers/',
   },
 ];
@@ -67,22 +67,22 @@ const teachingMethods = [
   {
     title: 'Online/Webinar Based',
     description: 'Utilizing modern webinar tools to deliver real-time teaching experiences that are both engaging and educational.',
-    imgSrc: 'https://mathscifound.org/wp-content/uploads/2020/03/language-school-illustration-21.png',
+    imgSrc: 'https://images.pexels.com/photos/1595391/pexels-photo-1595391.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   },
   {
     title: 'Interdisciplinary Approach',
     description: 'Incorporating multiple disciplines to provide a holistic learning experience that encourages critical thinking and creativity.',
-    imgSrc: 'https://cdn2.iconfinder.com/data/icons/education-1-20/128/69-512.png',
+    imgSrc: 'https://images.pexels.com/photos/3017115/pexels-photo-3017115.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   },
   {
     title: 'Hands-on & Project Based Learning',
     description: 'Engaging students in practical projects to apply theoretical knowledge and develop problem-solving skills.',
-    imgSrc: 'https://cdn3.iconfinder.com/data/icons/education-209/64/project-plan-board-learning-school-512.png',
+    imgSrc: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   },
   {
     title: 'Discussion with Peer Group',
     description: 'Facilitating peer discussions to enhance learning through collaboration, exchange of ideas, and feedback.',
-    imgSrc: 'https://cdn2.iconfinder.com/data/icons/communication-456/128/discussion-group-meeting-conference-business-communication-512.png',
+    imgSrc: 'https://images.pexels.com/photos/1325762/pexels-photo-1325762.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   },
 ];
 
@@ -103,7 +103,7 @@ function CoursesPage() {
   return (
     <div className="bg-coolGray-100">
       {/* Header Section */}
-      <div className="bg-[url('https://mathscifound.org/wp-content/uploads/2020/03/language-school-07.png')] bg-cover bg-top-right py-4 px-4 text-white">
+      <div className="bg-[url('https://images.pexels.com/photos/158163/clouds-cloudporn-weather-lookup-158163.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-top-right py-4 px-4 text-white">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center">
           <div className="w-full md:w-1/2">
             <h1 className="text-6xl font-serif mb-4">Online Hands-on Courses for Teachers and Students</h1>
