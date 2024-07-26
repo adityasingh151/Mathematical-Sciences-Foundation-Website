@@ -85,6 +85,7 @@ const router = createBrowserRouter([
           { path: 'PrivacyPolicy', element: <PrivacyPolicy /> },
           { path: 'gallery', element: <DisplayContent /> },
           { path: 'latest', element: <Latest /> },
+          { path: '/initiatives' , element: <Initiative2Page/>},
           { path: '/initiatives/startup' , element: <Initiative2Page/>},
           { path: '/initiatives/internetCollege' , element: <Initiative1Page/>},
           { path: '/initiatives/internetCollege/engineeringKitchen' , element: <Initiative3Page/>},

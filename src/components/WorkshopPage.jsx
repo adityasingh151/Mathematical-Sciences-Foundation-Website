@@ -75,7 +75,7 @@ const WorkshopPage = () => {
       title={workshopData.headerTitle}
       subtitle={workshopData.headerSubtitle}
       buttonText="Register Now"
-      onButtonClick={() => window.location.href = '#registration'}
+      onButtonClick= {() => window.location.href = workshopData.registrationLink || "#noLinkAvailable"}
       />
     }
     {
@@ -115,7 +115,7 @@ const WorkshopPage = () => {
         ]}
         registrationInfo={workshopData.registrationInfo}
         buttonText="Register Now"
-        onButtonClick={() => window.location.href = '#registration'}
+        onButtonClick={() => window.location.href = workshopData.registrationLink || "#noLinkAvailable" }
         />
       }
       {workshopData.address && 

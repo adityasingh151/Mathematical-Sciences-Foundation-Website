@@ -17,7 +17,8 @@ const WorkshopForm = () => {
   const [fields, setFields] = useState([
     'headerTitle',
     'aboutDescription',
-    'aboutImage'
+    'aboutImage',
+    'registrationLink' // Moved registrationLink to header section
   ]);
 
   const aboutImage = watch('aboutImage');
@@ -94,7 +95,8 @@ const WorkshopForm = () => {
         ...(activeSections.headerSection && {
           headerTitle: data.headerTitle || "",
           aboutDescription: data.aboutDescription || "",
-          aboutImage: downloadURL || ""
+          aboutImage: downloadURL || "",
+          registrationLink: data.registrationLink || ""
         }),
         ...(activeSections.reachSection && {
           address: data.address || "",
@@ -113,8 +115,7 @@ const WorkshopForm = () => {
           prerequisites: data.prerequisites || "",
           designedFor: data.designedFor || "",
           lastDateForRegistration: data.lastDateForRegistration || "",
-          workshopRegistrationFee: data.workshopRegistrationFee || "",
-          registrationLink: data.registrationLink || ""
+          workshopRegistrationFee: data.workshopRegistrationFee || ""
         })
       };
   
@@ -154,7 +155,7 @@ const WorkshopForm = () => {
   };
 
   const sectionFields = {
-    headerSection: ['headerTitle', 'aboutDescription', 'aboutImage'],
+    headerSection: ['headerTitle', 'aboutDescription', 'aboutImage', 'registrationLink'], // Added registrationLink here
     reachSection: ['address', 'addressURL'],
     outcomesSection: ['outcomeContent'],
     quoteSection: ['quote'],
@@ -165,8 +166,7 @@ const WorkshopForm = () => {
       'prerequisites',
       'designedFor',
       'lastDateForRegistration',
-      'workshopRegistrationFee',
-      'registrationLink'
+      'workshopRegistrationFee'
     ]
   };
 
@@ -208,7 +208,7 @@ const WorkshopForm = () => {
               <div key={field} className="relative">
                 <label className="block text-sm font-medium text-gray-700 capitalize">
                   {field.replace(/([A-Z])/g, ' $1')}
-                  {['headerSubtitle', 'outcomeContent', 'quote', 'prerequisites', 'designedFor', 'lastDateForRegistration'].includes(field) ? null : <span className="text-red-500">*</span>}
+                  {['headerSubtitle', 'outcomeContent', 'quote', 'prerequisites', 'designedFor', 'lastDateForRegistration', 'registrationLink'].includes(field) ? null : <span className="text-red-500">*</span>}
                 </label>
                 {field === 'aboutDescription' ? (
                   <textarea
@@ -253,7 +253,7 @@ const WorkshopForm = () => {
                   <input
                     type={getInputType(field)}
                     {...register(field, {
-                      required: activeSections.headerSection && 'This field is required',
+                      required: ['headerTitle', 'aboutDescription', 'aboutImage'].includes(field) ? activeSections.headerSection && 'This field is required' : false,
                       minLength: {
                         value: field.includes('Fee') ? 0 : 3,
                         message: 'Minimum length is 3 characters'
