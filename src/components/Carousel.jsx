@@ -37,7 +37,7 @@ const Carousel = () => {
   }, []);
 
   if (isLoading) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   if (error) {
@@ -45,17 +45,21 @@ const Carousel = () => {
   }
 
   return (
-    <div className="mx-auto py-1 rounded-md">
+    <div className="mx-auto py-8 rounded-md bg-gradient-to-r from-teal-600 to-blue-700 shadow-lg">
+      {/* <h2 className="text-4xl font-bold text-center text-white mb-8">
+        Discover Our Stunning Collection
+      </h2> */}
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 2500,
+          delay: 3000,
           disableOnInteraction: false,
         }}
         pagination={{
           clickable: true,
+          dynamicBullets: true,
         }}
         navigation={true}
         className="mySwiper rounded-md shadow-md"
@@ -64,15 +68,15 @@ const Carousel = () => {
         {images.map((image, index) => (
           <SwiperSlide key={index}>
             <div
-              className="relative h-full w-full"
+              className="relative h-full w-full rounded-md overflow-hidden"
               style={{
                 backgroundImage: `url(${image})`,
-                backgroundSize: 'cover', // Ensures full image is visible
+                backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center' // Centers the image in the slide
+                backgroundPosition: 'center',
               }}
             >
-              <div className="absolute inset-0 bg-black opacity-25"></div> 
+              <div className="absolute inset-0 bg-black bg-opacity-40 rounded-md"></div>
             </div>
           </SwiperSlide>
         ))}

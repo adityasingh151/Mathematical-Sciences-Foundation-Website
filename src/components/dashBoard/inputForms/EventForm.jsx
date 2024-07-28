@@ -25,10 +25,14 @@ const EventForm = () => {
   const aboutImage = watch('aboutImage');
   const sponsorImage1 = watch('sponsorImage1');
   const sponsorImage2 = watch('sponsorImage2');
+  const sponsorImage3 = watch('sponsorImage3');
+  const sponsorImage4 = watch('sponsorImage4');
 
   const [imagePreview, setImagePreview] = useState();
   const [sponsorImage1Preview, setSponsorImage1Preview] = useState();
   const [sponsorImage2Preview, setSponsorImage2Preview] = useState();
+  const [sponsorImage3Preview, setSponsorImage3Preview] = useState();
+  const [sponsorImage4Preview, setSponsorImage4Preview] = useState();
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -98,6 +102,32 @@ const EventForm = () => {
   }, [sponsorImage2]);
 
   useEffect(() => {
+    if (sponsorImage3 && sponsorImage3.length > 0) {
+      const file = sponsorImage3[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSponsorImage3Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setSponsorImage3Preview(null);
+    }
+  }, [sponsorImage3]);
+
+  useEffect(() => {
+    if (sponsorImage4 && sponsorImage4.length > 0) {
+      const file = sponsorImage4[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSponsorImage4Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setSponsorImage4Preview(null);
+    }
+  }, [sponsorImage4]);
+
+  useEffect(() => {
     // Simulate a delay to demonstrate the loading state
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -127,15 +157,23 @@ const EventForm = () => {
       if (data.sponsorImage2?.[0] instanceof File) {
         uploadPromises.push(uploadImage(data.sponsorImage2[0], `sponsors/${data.sponsorImage2[0].name}`));
       }
+      if (data.sponsorImage3?.[0] instanceof File) {
+        uploadPromises.push(uploadImage(data.sponsorImage3[0], `sponsors/${data.sponsorImage3[0].name}`));
+      }
+      if (data.sponsorImage4?.[0] instanceof File) {
+        uploadPromises.push(uploadImage(data.sponsorImage4[0], `sponsors/${data.sponsorImage4[0].name}`));
+      }
 
       const urls = await Promise.all(uploadPromises);
-      const [aboutImageURL, sponsorImage1URL, sponsorImage2URL] = urls;
+      const [aboutImageURL, sponsorImage1URL, sponsorImage2URL, sponsorImage3URL, sponsorImage4URL] = urls;
 
       const eventData = {
         ...data,
         aboutImage: aboutImageURL || data.aboutImage,
         sponsorImage1: sponsorImage1URL || data.sponsorImage1,
         sponsorImage2: sponsorImage2URL || data.sponsorImage2,
+        sponsorImage3: sponsorImage3URL || data.sponsorImage3,
+        sponsorImage4: sponsorImage4URL || data.sponsorImage4,
         eventDate: moment(data.eventDate).format('DD MMMM, YYYY'),
         eventTime: moment(data.eventTime, 'HH:mm').format('hh:mm A'),
       };
@@ -177,6 +215,8 @@ const EventForm = () => {
     register('aboutImage', { required: 'This field is required' });
     register('sponsorImage1');
     register('sponsorImage2');
+    register('sponsorImage3');
+    register('sponsorImage4');
   }, [register]);
 
   useEffect(() => {
@@ -207,7 +247,7 @@ const EventForm = () => {
   const sectionFields = {
     headerSection: ['headerSubtitle'],
     featuresSection: ['feature1', 'feature2', 'feature3', 'feature4'],
-    sponsorsSection: ['sponsor1', 'sponsorImage1', 'sponsor2', 'sponsorImage2', 'sponsor3'],
+    sponsorsSection: ['sponsor1', 'sponsorImage1', 'sponsor2', 'sponsorImage2', 'sponsor3', 'sponsorImage3', 'sponsor4', 'sponsorImage4'],
     rewardsSection: [
       'studentReward1', 'studentReward2', 'studentReward3',
       'schoolReward1', 'schoolReward2', 'schoolReward3'
@@ -262,14 +302,14 @@ const EventForm = () => {
             <div key={field} className="relative">
               <label className="block text-sm font-medium text-gray-700 capitalize">
                 {field.replace(/([A-Z])/g, ' $1')}
-                {['headerSubtitle', 'feature1', 'feature2', 'feature3', 'feature4', 'sponsor1', 'sponsorImage1', 'sponsor2', 'sponsorImage2', 'sponsor3', 'studentReward1', 'studentReward2', 'studentReward3', 'schoolReward1', 'schoolReward2', 'schoolReward3', 'organizationDescription', 'advisoryMember1', 'advisoryMemberDescription1', 'advisoryMember2', 'advisoryMemberDescription2', 'advisoryMember3', 'advisoryMemberDescription3', 'advisoryMember4', 'advisoryMemberDescription4', 'eligibility', 'eventDate', 'eventTime', 'registrationFee', 'registrationLink'].includes(field) ? null : <span className="text-red-500">*</span>}
+                {['headerSubtitle', 'feature1', 'feature2', 'feature3', 'feature4', 'sponsor1', 'sponsorImage1', 'sponsor2', 'sponsorImage2', 'sponsor3', 'sponsorImage3', 'sponsor4', 'sponsorImage4', 'studentReward1', 'studentReward2', 'studentReward3', 'schoolReward1', 'schoolReward2', 'schoolReward3', 'organizationDescription', 'advisoryMember1', 'advisoryMemberDescription1', 'advisoryMember2', 'advisoryMemberDescription2', 'advisoryMember3', 'advisoryMemberDescription3', 'advisoryMember4', 'advisoryMemberDescription4', 'eligibility', 'eventDate', 'eventTime', 'registrationFee', 'registrationLink'].includes(field) ? null : <span className="text-red-500">*</span>}
               </label>
-              {field === 'aboutImage' || field === 'sponsorImage1' || field === 'sponsorImage2' ? (
+              {field === 'aboutImage' || field === 'sponsorImage1' || field === 'sponsorImage2' || field === 'sponsorImage3' || field === 'sponsorImage4' ? (
                 <div>
                   <input
                     type="file"
                     {...register(field, {
-                      required: ['headerSubtitle', 'feature1', 'feature2', 'feature3', 'feature4', 'sponsor1', 'sponsorImage1', 'sponsor2', 'sponsorImage2', 'sponsor3', 'studentReward1', 'studentReward2', 'studentReward3', 'schoolReward1', 'schoolReward2', 'schoolReward3', 'organizationDescription', 'advisoryMember1', 'advisoryMemberDescription1', 'advisoryMember2', 'advisoryMemberDescription2', 'advisoryMember3', 'advisoryMemberDescription3', 'advisoryMember4', 'advisoryMemberDescription4', 'eligibility', 'eventDate', 'eventTime', 'registrationFee', 'registrationLink'].includes(field) ? false : 'This field is required'
+                      required: ['headerSubtitle', 'feature1', 'feature2', 'feature3', 'feature4', 'sponsor1', 'sponsorImage1', 'sponsor2', 'sponsorImage2', 'sponsor3', 'sponsorImage3', 'sponsor4', 'sponsorImage4', 'studentReward1', 'studentReward2', 'studentReward3', 'schoolReward1', 'schoolReward2', 'schoolReward3', 'organizationDescription', 'advisoryMember1', 'advisoryMemberDescription1', 'advisoryMember2', 'advisoryMemberDescription2', 'advisoryMember3', 'advisoryMemberDescription3', 'advisoryMember4', 'advisoryMemberDescription4', 'eligibility', 'eventDate', 'eventTime', 'registrationFee', 'registrationLink'].includes(field) ? false : 'This field is required'
                     })}
                     className="mt-1 block w-full pl-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
@@ -294,12 +334,26 @@ const EventForm = () => {
                       className="mt-4 h-48 w-auto border rounded-md mx-auto"
                     />
                   )}
+                  {field === 'sponsorImage3' && sponsorImage3Preview && (
+                    <img
+                      src={sponsorImage3Preview}
+                      alt="Preview"
+                      className="mt-4 h-48 w-auto border rounded-md mx-auto"
+                    />
+                  )}
+                  {field === 'sponsorImage4' && sponsorImage4Preview && (
+                    <img
+                      src={sponsorImage4Preview}
+                      alt="Preview"
+                      className="mt-4 h-48 w-auto border rounded-md mx-auto"
+                    />
+                  )}
                 </div>
               ) : (
                 <input
                   type={getInputType(field)}
                   {...register(field, {
-                    required: ['headerSubtitle', 'feature1', 'feature2', 'feature3', 'feature4', 'sponsor1', 'sponsorImage1', 'sponsor2', 'sponsorImage2', 'sponsor3', 'studentReward1', 'studentReward2', 'studentReward3', 'schoolReward1', 'schoolReward2', 'schoolReward3', 'organizationDescription', 'advisoryMember1', 'advisoryMemberDescription1', 'advisoryMember2', 'advisoryMemberDescription2', 'advisoryMember3', 'advisoryMemberDescription3', 'advisoryMember4', 'advisoryMemberDescription4', 'eligibility', 'eventDate', 'eventTime', 'registrationFee', 'registrationLink'].includes(field) ? false : 'This field is required',
+                    required: ['headerSubtitle', 'feature1', 'feature2', 'feature3', 'feature4', 'sponsor1', 'sponsorImage1', 'sponsor2', 'sponsorImage2', 'sponsor3', 'sponsorImage3', 'sponsor4', 'sponsorImage4', 'studentReward1', 'studentReward2', 'studentReward3', 'schoolReward1', 'schoolReward2', 'schoolReward3', 'organizationDescription', 'advisoryMember1', 'advisoryMemberDescription1', 'advisoryMember2', 'advisoryMemberDescription2', 'advisoryMember3', 'advisoryMemberDescription3', 'advisoryMember4', 'advisoryMemberDescription4', 'eligibility', 'eventDate', 'eventTime', 'registrationFee', 'registrationLink'].includes(field) ? false : 'This field is required',
                     minLength: {
                       value: field.includes('Fee') ? 0 : 3,
                       message: 'Minimum length is 3 characters'

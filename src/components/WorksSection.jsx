@@ -62,8 +62,6 @@ function WorksSection() {
   const [isEventLoading, setIsEventLoading] = useState(true);
   const [works, setWorks] = useState([]);
 
-
-
   useEffect(() => {
     const db = getDatabase();
 
@@ -139,14 +137,14 @@ function WorksSection() {
     ]
   };
 
-  if(isEventLoading || isWorkshopLoading) return (<Loading/>)
+  if (isEventLoading || isWorkshopLoading) return (<Loading />)
 
   return (
-    <section id="work" className="bg-gradient-to-r from-cyan-50 to-blue-100 pt-4 pb-7">
+    <section id="work" className="bg-gradient-to-r from-teal-600 to-blue-700 py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h5 className="text-indigo-600 uppercase font-semibold">Works</h5>
-          <h4 className="main_title text-3xl font-bold">Some of Our Recent Works</h4>
+          <h5 className="text-yellow-300 uppercase font-semibold">Works</h5>
+          <h4 className="main_title text-4xl font-bold text-white">Some of Our Recent Works</h4>
         </div>
         <Slider {...settings}>
           {works.map((work, index) => (
@@ -155,8 +153,8 @@ function WorksSection() {
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-2xl">
                   <img src={work.image} alt={work.title} className="w-full h-64 object-cover" />
                   <div className="p-4">
-                    <h5 className="text-xl font-bold">{work.title}</h5>
-                    <p className="text-gray-700">{work.description}</p>
+                    <h5 className="text-2xl font-bold text-gray-800">{work.title}</h5>
+                    <p className="text-gray-700 mt-2">{work.description}</p>
                   </div>
                 </div>
               </Link>

@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class', // Enable dark mode using the 'class' strategy
   theme: {
     extend: {
       keyframes: {
@@ -51,6 +52,14 @@ export default {
           '0%': { transform: 'translate(100%, 100%)', opacity: '0' },
           '100%': { transform: 'translate(0, 0)', opacity: '1' },
         },
+        typewriter: {
+          'from': { width: '0' },
+          'to': { width: '100%' },
+        },
+        'blink-caret': {
+          'from, to': { borderColor: 'transparent' },
+          '50%': { borderColor: 'white' },
+        },
       },
       animation: {
         'fly-in': 'flyIn 1.5s ease-out forwards',
@@ -64,6 +73,7 @@ export default {
         'slide-in-top-right': 'slide-in-top-right 1.5s ease-out',
         'slide-in-bottom-left': 'slide-in-bottom-left 1.5s ease-out',
         'slide-in-bottom-right': 'slide-in-bottom-right 1.5s ease-out',
+        'typewriter': 'typewriter 4s steps(40, end) forwards, blink-caret 0.75s step-end infinite',
       },
     },
   },
