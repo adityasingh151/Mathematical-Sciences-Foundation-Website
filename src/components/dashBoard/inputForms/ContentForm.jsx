@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom'; // Add this import
+import { useLocation, useNavigate } from 'react-router-dom';
 import { BsPlusCircle } from 'react-icons/bs';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { ref, push, update } from 'firebase/database'; // Import update
+import { ref, push, update } from 'firebase/database';
 import { imgdb, txtdb } from '../../databaseConfig/firebaseConfig';
 import Loading from '../../LoadSaveAnimation/Loading';
 import Saving from '../../LoadSaveAnimation/Saving';
@@ -11,7 +11,7 @@ import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
 
 const ContentForm = () => {
-  const { register, handleSubmit, watch, setValue, setError, formState: { errors } } = useForm(); // Add setValue
+  const { register, handleSubmit, watch, setValue, setError, clearErrors, formState: { errors } } = useForm();
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -22,8 +22,9 @@ const ContentForm = () => {
     articleSection: false
   });
 
-  const location = useLocation(); // Get location
-  const editData = location.state?.item; // Get item from state if present
+  const location = useLocation();
+  const navigate = useNavigate();
+  const editData = location.state?.item;
   const editType = location.state?.type;
 
   const imageFile = watch('imageFile');
@@ -47,20 +48,23 @@ const ContentForm = () => {
   useEffect(() => {
     if (editData) {
       if (editType === 'imageContent') {
+        setValue('category', editData.category);
         setValue('imageDetails', editData.imageDetails);
         setImagePreview(editData.imageUrl);
-        setOpenedSections({ imageSection: true });
+        setOpenedSections({ imageSection: true, videoSection: false, articleSection: false });
       } else if (editType === 'videoContent') {
+        setValue('category', editData.category);
         setValue('videoUrl', `https://www.youtube.com/watch?v=${editData.videoUrl}`);
         setValue('videoDetails', editData.videoDetails);
-        setOpenedSections({ videoSection: true });
+        setOpenedSections({ imageSection: false, videoSection: true, articleSection: false });
       } else if (editType === 'articleContent') {
+        setValue('category', editData.category);
         setValue('articleUrl', editData.articleUrl);
         setValue('articleHeading', editData.articleHeading);
         if (editData.articleImageUrl) {
           setImagePreview(editData.articleImageUrl);
         }
-        setOpenedSections({ articleSection: true });
+        setOpenedSections({ imageSection: false, videoSection: false, articleSection: true });
       }
     }
   }, [editData, editType, setValue]);
@@ -100,13 +104,12 @@ const ContentForm = () => {
         data.videoUrl = embedId;
       }
 
-      const uploadedData = {};
-      if (openedSections.imageSection) {
-        if (data.imageFile && data.imageFile.length > 0) {
-          uploadedData.imageUrl = await uploadImage(data.imageFile[0]);
-        } else if (editData) {
-          uploadedData.imageUrl = editData.imageUrl; // Retain previous image URL if no new image is uploaded
-        }
+      const uploadedData = {
+        category: data.category || ''
+      };
+
+      if (openedSections.imageSection && data.imageFile) {
+        uploadedData.imageUrl = await uploadImage(data.imageFile[0]);
         uploadedData.imageDetails = data.imageDetails || '';
       }
 
@@ -118,10 +121,8 @@ const ContentForm = () => {
       if (openedSections.articleSection && data.articleUrl) {
         uploadedData.articleUrl = data.articleUrl;
         uploadedData.articleHeading = data.articleHeading || '';
-        if (data.articleImage && data.articleImage.length > 0) {
+        if (data.articleImage.length > 0) {
           uploadedData.articleImageUrl = await uploadImage(data.articleImage[0]);
-        } else if (editData) {
-          uploadedData.articleImageUrl = editData.articleImageUrl; // Retain previous article image URL if no new image is uploaded
         }
       }
 
@@ -143,6 +144,7 @@ const ContentForm = () => {
       }
 
       setShowSuccess(true);
+      setTimeout(() => navigate('/admin/view-content'), 2000); // Navigate back after success
     } catch (error) {
       console.error('Error submitting content: ', error);
       setShowError(true);
@@ -173,6 +175,12 @@ const ContentForm = () => {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 bg-white shadow-lg rounded-lg flex-grow space-y-4">
           <h2 className="text-2xl font-bold text-indigo-600">{editData ? 'Edit Content' : 'Upload Content'}</h2>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Category
+            </label>
+            <input type="text" {...register('category')} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+          </div>
           {Object.entries(openedSections).map(([sectionKey, isOpen]) => isOpen && (
             <div key={sectionKey}>
               {sectionKey === 'imageSection' && (
@@ -207,11 +215,8 @@ const ContentForm = () => {
                   </label>
                   <input type="url" {...register('articleUrl', { required: 'Article URL is required' })} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
                   {errors.articleUrl && <p className="text-red-500 text-xs italic">{errors.articleUrl.message}</p>}
-                  <label className="block text-sm font-medium text-gray-700 mt-2">
-                    Article Heading <span className="text-red-500">*</span>
-                  </label>
-                  <input type="text" {...register('articleHeading', { required: 'Article Heading is required' })} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-                  {errors.articleHeading && <p className="text-red-500 text-xs italic">{errors.articleHeading.message}</p>}
+                  <label className="block text-sm font-medium text-gray-700 mt-2">Article Heading</label>
+                  <input type="text" {...register('articleHeading')} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
                   <label className="block text-sm font-medium text-gray-700 mt-2">Article Image</label>
                   <input type="file" {...register('articleImage')} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
                 </div>

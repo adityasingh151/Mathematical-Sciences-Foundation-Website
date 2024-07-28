@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue, remove } from "firebase/database";
-import Modal from '../../Modal'; // Assuming Modal is a reusable component
-import Notification from '../../Notification'; // Import the Notification component
+import Modal from '../../Modal';
+import Notification from '../../Notification';
 import Loading from '../../LoadSaveAnimation/Loading';
-import { useNavigate } from 'react-router-dom'; // Add this import
-
-
+import { useNavigate } from 'react-router-dom';
 
 const ViewContent = () => {
   const [galleryImages, setGalleryImages] = useState([]);
@@ -16,40 +14,35 @@ const ViewContent = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
-  const navigate = useNavigate(); // Initialize navigate
-
-
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const db = getDatabase();
-    
-    // Fetch Gallery Images
-    const galleryRef = ref(db, 'imageContent');
-    onValue(galleryRef, (snapshot) => {
-      const data = snapshot.val();
-      setGalleryImages(Object.keys(data).map(key => ({ id: key, ...data[key] })));
-      setIsLoading(false);
-    });
 
-    // Fetch Videos
-    const videosRef = ref(db, 'videoContent');
-    onValue(videosRef, (snapshot) => {
-      const data = snapshot.val();
-      setVideos(Object.keys(data).map(key => ({ id: key, ...data[key] })));
-      setIsLoading(false);
-    });
+    const fetchContent = (path, setState) => {
+      const contentRef = ref(db, path);
+      onValue(contentRef, (snapshot) => {
+        const data = snapshot.val();
+        setState(Object.keys(data || {}).map(key => ({ id: key, ...data[key] })));
+      });
+    };
 
-    // Fetch Articles
-    const articlesRef = ref(db, 'articleContent');
-    onValue(articlesRef, (snapshot) => {
-      const data = snapshot.val();
-      setArticles(Object.keys(data).map(key => ({ id: key, ...data[key] })));
-      setIsLoading(false);
-    });
+    fetchContent('imageContent', setGalleryImages);
+    fetchContent('videoContent', setVideos);
+    fetchContent('articleContent', setArticles);
 
-    console.log("ViewContent")
-
+    setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    const uniqueCategories = new Set();
+    galleryImages.forEach(item => uniqueCategories.add(item.category));
+    videos.forEach(item => uniqueCategories.add(item.category));
+    articles.forEach(item => uniqueCategories.add(item.category));
+    setCategories(['All', ...uniqueCategories]);
+  }, [galleryImages, videos, articles]);
 
   const handleDelete = async () => {
     const db = getDatabase();
@@ -76,21 +69,40 @@ const ViewContent = () => {
   };
 
   const handleEdit = (item, type) => {
-    console.log("I am called.")
-    navigate(`/admin/forms/${type.slice(0, -7)}/edit/${item.id}`, { state: { item, type } }); // Pass state
+    navigate(`/admin/forms/${type.slice(0, -7)}/edit/${item.id}`, { state: { item, type } });
+  };
+
+  const filterByCategory = (items) => {
+    if (selectedCategory === 'All') {
+      return items;
+    }
+    return items.filter(item => item.category === selectedCategory);
   };
 
   if (isLoading) return <Loading />;
 
   return (
     <div className="container mx-auto p-4 sm:mt-2 mt-20">
-      <h1 className="text-3xl font-bold mb-4 text-center ">Manage Content</h1>
-      
+      <h1 className="text-3xl font-bold mb-4 text-center">Manage Content</h1>
+
+      <div className="mb-8">
+        <label className="text-lg font-semibold">Filter by Category: </label>
+        <select
+          className="border rounded p-2 ml-2"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          {categories.map((category, index) => (
+            <option key={index} value={category}>{category}</option>
+          ))}
+        </select>
+      </div>
+
       {/* Gallery Section */}
       <div className="my-8">
         <h2 className="text-3xl font-bold text-indigo-700 mb-6">Gallery Images</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {galleryImages.map(image => (
+          {filterByCategory(galleryImages).map(image => (
             <div key={image.id} className="p-4 border rounded mb-2 flex flex-col items-center">
               <img
                 src={image.imageUrl}
@@ -111,7 +123,7 @@ const ViewContent = () => {
       <div className="my-8">
         <h2 className="text-3xl font-bold text-indigo-700 mb-6">Videos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {videos.map(video => (
+          {filterByCategory(videos).map(video => (
             <div key={video.id} className="p-4 border rounded mb-2 flex flex-col items-center">
               <iframe
                 title={`Video ${video.videoDetails}`}
@@ -134,7 +146,7 @@ const ViewContent = () => {
       {/* Articles Section */}
       <div className="my-8">
         <h2 className="text-3xl font-bold text-indigo-700 mb-6">Articles</h2>
-        {articles.map(article => (
+        {filterByCategory(articles).map(article => (
           <div key={article.id} className="p-4 border rounded mb-2">
             <a href={article.articleUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors">
               {article.articleHeading} <span className='italic text-sm text-gray-600'>~ Prof. Dinesh Singh</span>
