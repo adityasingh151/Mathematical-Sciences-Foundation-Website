@@ -11,6 +11,7 @@ import CoursesPage from './coursesPage/CoursesPage'
 import SponsorsImageForm from './dashBoard/inputForms/SponsorsImageForm';
 import ReviewForm from './dashBoard/inputForms/ReviewForm';
 import ReviewsDisplay from './ReviewsDisplay';
+import HeaderPattern from './HeaderPattern';
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -31,9 +32,10 @@ function Home() {
 
   return (
     <>
+    <HeaderPattern/>
       <Carousel />
-      <AboutSection />
-      <SponsorsSection />
+      {/* <AboutSection />
+      <SponsorsSection /> */}
       <WorksSection />
       <ReviewsDisplay/>
     </>

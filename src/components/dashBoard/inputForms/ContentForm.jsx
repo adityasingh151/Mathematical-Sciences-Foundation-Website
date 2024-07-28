@@ -11,7 +11,7 @@ import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
 
 const ContentForm = () => {
-  const { register, handleSubmit, watch, setValue, setError, clearErrors, formState: { errors } } = useForm(); // Add setValue
+  const { register, handleSubmit, watch, setValue, setError, formState: { errors } } = useForm(); // Add setValue
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -26,8 +26,6 @@ const ContentForm = () => {
   const editData = location.state?.item; // Get item from state if present
   const editType = location.state?.type;
 
-
-
   const imageFile = watch('imageFile');
   const [imagePreview, setImagePreview] = useState();
 
@@ -39,42 +37,36 @@ const ContentForm = () => {
     } else {
       setImagePreview(null);
     }
-    console.log("Contentform1.")
   }, [imageFile]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1000);
-    console.log("ContentForm2.")
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    // console.log(location)
     if (editData) {
-      // setOpenedSections({ imageSection: false, videoSection: false, articleSection: false, [`${editType}`]: true });
       if (editType === 'imageContent') {
         setValue('imageDetails', editData.imageDetails);
         setImagePreview(editData.imageUrl);
-        setOpenedSections({ imageSection: true});
+        setOpenedSections({ imageSection: true });
       } else if (editType === 'videoContent') {
         setValue('videoUrl', `https://www.youtube.com/watch?v=${editData.videoUrl}`);
         setValue('videoDetails', editData.videoDetails);
-        setOpenedSections({ videoSection: true});
+        setOpenedSections({ videoSection: true });
       } else if (editType === 'articleContent') {
         setValue('articleUrl', editData.articleUrl);
         setValue('articleHeading', editData.articleHeading);
         if (editData.articleImageUrl) {
           setImagePreview(editData.articleImageUrl);
         }
-        setOpenedSections({ articleSection: true});
+        setOpenedSections({ articleSection: true });
       }
     }
-
-    console.log("ContentForm3.")
   }, [editData, editType, setValue]);
 
   const toggleSection = (section) => {
-    setOpenedSections(prev => ({ 
+    setOpenedSections(prev => ({
       ...{ imageSection: false, videoSection: false, articleSection: false },
       [section]: !prev[section]
     }));
@@ -109,8 +101,12 @@ const ContentForm = () => {
       }
 
       const uploadedData = {};
-      if (openedSections.imageSection && data.imageFile) {
-        uploadedData.imageUrl = await uploadImage(data.imageFile[0]);
+      if (openedSections.imageSection) {
+        if (data.imageFile && data.imageFile.length > 0) {
+          uploadedData.imageUrl = await uploadImage(data.imageFile[0]);
+        } else if (editData) {
+          uploadedData.imageUrl = editData.imageUrl; // Retain previous image URL if no new image is uploaded
+        }
         uploadedData.imageDetails = data.imageDetails || '';
       }
 
@@ -122,8 +118,10 @@ const ContentForm = () => {
       if (openedSections.articleSection && data.articleUrl) {
         uploadedData.articleUrl = data.articleUrl;
         uploadedData.articleHeading = data.articleHeading || '';
-        if (data.articleImage.length > 0) {
+        if (data.articleImage && data.articleImage.length > 0) {
           uploadedData.articleImageUrl = await uploadImage(data.articleImage[0]);
+        } else if (editData) {
+          uploadedData.articleImageUrl = editData.articleImageUrl; // Retain previous article image URL if no new image is uploaded
         }
       }
 
@@ -209,8 +207,11 @@ const ContentForm = () => {
                   </label>
                   <input type="url" {...register('articleUrl', { required: 'Article URL is required' })} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
                   {errors.articleUrl && <p className="text-red-500 text-xs italic">{errors.articleUrl.message}</p>}
-                  <label className="block text-sm font-medium text-gray-700 mt-2">Article Heading</label>
-                  <input type="text" {...register('articleHeading')} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                  <label className="block text-sm font-medium text-gray-700 mt-2">
+                    Article Heading <span className="text-red-500">*</span>
+                  </label>
+                  <input type="text" {...register('articleHeading', { required: 'Article Heading is required' })} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                  {errors.articleHeading && <p className="text-red-500 text-xs italic">{errors.articleHeading.message}</p>}
                   <label className="block text-sm font-medium text-gray-700 mt-2">Article Image</label>
                   <input type="file" {...register('articleImage')} className="mt-1 block w-full pl-3 py-2 text-base text-gray-900 border border-gray-300 rounded-md shadow-sm  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
                 </div>

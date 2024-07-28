@@ -6,6 +6,7 @@ import Loading from '../../LoadSaveAnimation/Loading';
 import ErrorNotification from '../../LoadSaveAnimation/ErrorNotification';
 import SuccessNotification from '../../LoadSaveAnimation/SuccessNotification';
 import Saving from '../../LoadSaveAnimation/Saving';
+import Modal from '../../Modal'; // Import the Modal component
 
 const ViewReviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -15,6 +16,8 @@ const ViewReviews = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [editingReview, setEditingReview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
 
@@ -54,18 +57,25 @@ const ViewReviews = () => {
     setImageFile(null); // Reset the image file when editing
   };
 
-  const handleDelete = async (id) => {
+  const confirmDelete = (review) => {
+    setReviewToDelete(review);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async () => {
     try {
       setIsSaving(true);
-      const reviewRef = ref(getDatabase(), `reviews/${id}`);
+      const reviewRef = ref(getDatabase(), `reviews/${reviewToDelete.id}`);
       await remove(reviewRef);
-      setReviews(reviews.filter(review => review.id !== id));
+      setReviews(reviews.filter(review => review.id !== reviewToDelete.id));
       setShowSuccess(true);
     } catch (error) {
       console.error('Error deleting review: ', error);
       setShowError(true);
     } finally {
       setIsSaving(false);
+      setIsModalOpen(false);
+      setReviewToDelete(null);
     }
   };
 
@@ -142,7 +152,7 @@ const ViewReviews = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(review.id)}
+                      onClick={() => confirmDelete(review)}
                       className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700"
                     >
                       Delete
@@ -207,6 +217,17 @@ const ViewReviews = () => {
           </div>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} title="Delete Review" onClose={() => setIsModalOpen(false)}>
+        <p>Are you sure you want to delete this review?</p>
+        <div className="flex justify-end mt-4 gap-4">
+          <button onClick={() => setIsModalOpen(false)} className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded">
+            Cancel
+          </button>
+          <button onClick={handleDelete} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">
+            Delete
+          </button>
+        </div>
+      </Modal>
     </section>
   );
 };
