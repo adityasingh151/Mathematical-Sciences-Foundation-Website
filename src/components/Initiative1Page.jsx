@@ -1,56 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { txtdb } from '../components/databaseConfig/firebaseConfig';
 import Loading from '../components/LoadSaveAnimation/Loading';
 import Notification from './Notification';
-import { motion } from 'framer-motion';
 
 const Initiative1Page = () => {
-  const [introduction, setIntroduction] = useState('');
-  const [aims, setAims] = useState('');
-  const [philosophy, setPhilosophy] = useState('');
-  const [offerings, setOfferings] = useState('');
+  const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const sectionsRef = useRef({});
+
   useEffect(() => {
-    const introductionRef = ref(txtdb, 'internetCollege/introduction');
-    const aimsRef = ref(txtdb, 'internetCollege/aims');
-    const philosophyRef = ref(txtdb, 'internetCollege/philosophy');
-    const offeringsRef = ref(txtdb, 'internetCollege/offerings');
+    const sections = [
+      'introduction', 'aims', 'philosophy', 'offerings',
+      'vision', 'mission', 'philosophyPractice', 'outcomes',
+      'crisis', 'essentialFeatures', 'problems', 'advancedNations',
+      'need'
+    ];
 
     const fetchData = () => {
-      try {
-        onValue(introductionRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) setIntroduction(data);
-        });
+      const fetchedData = {};
+      let fetchedCount = 0;
 
-        onValue(aimsRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) setAims(data);
-        });
+      sections.forEach((section) => {
+        const sectionRef = ref(txtdb, `internetCollege/${section}`);
+        onValue(sectionRef, (snapshot) => {
+          const value = snapshot.val();
+          fetchedData[section] = value || '';
+          fetchedCount++;
 
-        onValue(philosophyRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) setPhilosophy(data);
+          // When all sections have been fetched, update the state
+          if (fetchedCount === sections.length) {
+            setData(fetchedData);
+            setLoading(false);
+          }
+        }, (error) => {
+          setError('Error fetching data');
+          setLoading(false);
         });
-
-        onValue(offeringsRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) setOfferings(data);
-        });
-
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Error fetching data');
-        setLoading(false);
-      }
+      });
     };
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(entry.target.dataset.animation);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    Object.values(sectionsRef.current).forEach((section) => {
+      if (section) observer.observe(section);
+    });
+
+    return () => {
+      Object.values(sectionsRef.current).forEach((section) => {
+        if (section) observer.unobserve(section);
+      });
+    };
+  }, [data]);
 
   const handleLearnMoreClick = () => {
     document.getElementById('aims-section').scrollIntoView({ behavior: 'smooth' });
@@ -68,8 +84,49 @@ const Initiative1Page = () => {
     );
   }
 
+  const sectionNames = {
+    introduction: 'Introduction',
+    aims: 'Aims',
+    philosophy: 'Philosophy',
+    offerings: 'Offerings',
+    vision: 'Vision Statement',
+    mission: 'Mission Statement',
+    philosophyPractice: 'Philosophy and Practice',
+    outcomes: 'Outcomes of the Philosophy',
+    crisis: 'Crisis Facing Education',
+    essentialFeatures: 'Essential Features of the Internet College',
+    problems: 'Why Do We Have These Problems?',
+    advancedNations: 'Is The Situation In The Advanced Nations Of The World Much Different?',
+    need: 'The Need for an ‘Out of the Box’ Digital and Technology Based Learning Platform'
+  };
+
+  const renderContent = (text) => {
+    const lines = text.split('\n');
+    const elements = [];
+
+    lines.forEach((line, index) => {
+      if (line.startsWith('•') || line.startsWith('-')) {
+        elements.push(
+          <li key={index} className="list-disc pl-5">
+            {line.slice(1).trim()}
+          </li>
+        );
+      } else if (line.trim() === '') {
+        elements.push(<br key={index} />);
+      } else {
+        elements.push(
+          <p key={index} className="mb-4">
+            {line}
+          </p>
+        );
+      }
+    });
+
+    return <>{elements}</>;
+  };
+
   return (
-    <div className="bg-sky-100 min-h-screen">
+    <div className="font-lato text-gray-900 bg-gradient-to-r from-cyan-50 to-blue-100 min-h-screen">
       <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-screen relative">
         <div className="flex items-center justify-center h-full bg-black bg-opacity-50">
           <div className="text-center text-white">
@@ -86,87 +143,25 @@ const Initiative1Page = () => {
       </div>
 
       <div className="container mx-auto px-6 lg:px-8 py-16 bg-gradient-to-b from-sky-100 to-white">
-        <motion.h1 
-          className="text-5xl font-extrabold text-center text-indigo-900 mb-12 tracking-wide"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          The Internet College
-        </motion.h1>
+        <h1 className="text-5xl font-extrabold text-center text-indigo-900 mb-12 tracking-wide">The Internet College</h1>
 
-        <motion.section 
-          className="mb-12"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="bg-white shadow-2xl rounded-lg p-10 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-3xl">
-            <h2 className="text-4xl font-semibold text-gray-800 mb-4 border-b-4 border-gray-300 pb-2">
-              Introduction
-            </h2>
-            <p className="text-lg text-gray-700 leading-relaxed font-serif whitespace-pre-line">
-              {introduction.split('\n').map((line, index) => (
-                <span key={index}>{line}<br /></span>
-              ))}
-            </p>
-          </div>
-        </motion.section>
-
-        <motion.section 
-          id="aims-section"
-          className="mb-12"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <div className="bg-white shadow-2xl rounded-lg p-10 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-3xl">
-            <h2 className="text-4xl font-semibold text-gray-800 mb-4 border-b-4 border-gray-300 pb-2">
-              Aims
-            </h2>
-            <p className="text-lg text-gray-700 leading-relaxed font-serif whitespace-pre-line">
-              {aims.split('\n').map((line, index) => (
-                <span key={index}>{line}<br /></span>
-              ))}
-            </p>
-          </div>
-        </motion.section>
-
-        <motion.section 
-          className="mb-12"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <div className="bg-white shadow-2xl rounded-lg p-10 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-3xl">
-            <h2 className="text-4xl font-semibold text-gray-800 mb-4 border-b-4 border-gray-300 pb-2">
-              Philosophy and Pedagogy
-            </h2>
-            <p className="text-lg text-gray-700 leading-relaxed font-serif whitespace-pre-line">
-              {philosophy.split('\n').map((line, index) => (
-                <span key={index}>{line}<br /></span>
-              ))}
-            </p>
-          </div>
-        </motion.section>
-
-        <motion.section 
-          className="mb-12"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <div className="bg-white shadow-2xl rounded-lg p-10 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-3xl">
-            <h2 className="text-4xl font-semibold text-gray-800 mb-4 border-b-4 border-gray-300 pb-2">
-              Current Offerings
-            </h2>
-            <p className="text-lg text-gray-700 leading-relaxed font-serif whitespace-pre-line">
-              {offerings.split('\n').map((line, index) => (
-                <span key={index}>{line}<br /></span>
-              ))}
-            </p>
-          </div>
-        </motion.section>
+        {Object.keys(data).map((key, index) => (
+          <section
+            key={key}
+            ref={(el) => (sectionsRef.current[key] = el)}
+            data-animation={`animate-${index % 2 === 0 ? 'slide-in' : 'fly-in'}`}
+            className="py-20 bg-gradient-to-r from-cyan-50 to-blue-100 mb-12"
+          >
+            <div className="container mx-auto px-8">
+              <h2 className="text-3xl font-bold mb-4 text-center capitalize">
+                {sectionNames[key]}
+              </h2>
+              <div className="text-lg leading-relaxed mb-4 font-serif">
+                {renderContent(data[key])}
+              </div>
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   );

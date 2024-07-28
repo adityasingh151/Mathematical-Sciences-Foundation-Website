@@ -39,7 +39,7 @@ function Home() {
       <SponsorsSection /> */}
       <WorksSection />
       <ReviewsDisplay/>
-      <InternetCollege/>
+      {/* <InternetCollege/> */}
     </>
   );
 }

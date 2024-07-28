@@ -5,45 +5,44 @@ import Saving from '../../LoadSaveAnimation/Saving';  // Importing the Saving co
 import Loading from '../../LoadSaveAnimation/Loading';  // Importing the Loading component
 import Notification from '../../Notification';  // Importing the Notification component
 
-
 const Initiative1Form = () => {
-  const [introduction, setIntroduction] = useState('');
-  const [aims, setAims] = useState('');
-  const [philosophy, setPhilosophy] = useState('');
-  const [offerings, setOfferings] = useState('');
+  const [data, setData] = useState({
+    introduction: '',
+    aims: '',
+    philosophy: '',
+    offerings: '',
+    vision: '',
+    mission: '',
+    essentialFeatures: '',
+    advancedNations: '',
+    problems: '',
+    crisis: '',
+    need: '',
+    outcomes: '',
+    philosophyPractice: ''
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    const introductionRef = ref(txtdb, 'internetCollege/introduction');
-    const aimsRef = ref(txtdb, 'internetCollege/aims');
-    const philosophyRef = ref(txtdb, 'internetCollege/philosophy');
-    const offeringsRef = ref(txtdb, 'internetCollege/offerings');
+    const sections = [
+      'introduction', 'aims', 'philosophy', 'offerings',
+      'vision', 'mission', 'essentialFeatures', 'advancedNations',
+      'problems', 'crisis', 'need', 'outcomes', 'philosophyPractice'
+    ];
 
     const fetchData = async () => {
       try {
-        onValue(introductionRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) setIntroduction(data);
-        });
-
-        onValue(aimsRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) setAims(data);
-        });
-
-        onValue(philosophyRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) setPhilosophy(data);
-        });
-
-        onValue(offeringsRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) setOfferings(data);
-        });
-
+        const fetchedData = {};
+        for (const section of sections) {
+          const sectionRef = ref(txtdb, `internetCollege/${section}`);
+          onValue(sectionRef, (snapshot) => {
+            fetchedData[section] = snapshot.val() || '';
+          });
+        }
+        setData(fetchedData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -60,11 +59,10 @@ const Initiative1Form = () => {
     setError('');
     setSuccess('');
     try {
-      await set(ref(txtdb, 'internetCollege/introduction'), introduction);
-      await set(ref(txtdb, 'internetCollege/aims'), aims);
-      await set(ref(txtdb, 'internetCollege/philosophy'), philosophy);
-      await set(ref(txtdb, 'internetCollege/offerings'), offerings);
-
+      const sections = Object.keys(data);
+      for (const section of sections) {
+        await set(ref(txtdb, `internetCollege/${section}`), data[section]);
+      }
       setSuccess('Sections saved successfully');
     } catch (error) {
       console.error('Error saving sections:', error);
@@ -72,6 +70,10 @@ const Initiative1Form = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleChange = (section, value) => {
+    setData(prevData => ({ ...prevData, [section]: value }));
   };
 
   const handleCloseNotification = () => {
@@ -86,49 +88,18 @@ const Initiative1Form = () => {
       {success && <Notification message={success} type="success" onClose={handleCloseNotification} />}
       {error && <Notification message={error} type="error" onClose={handleCloseNotification} />}
       
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Introduction</h2>
-        <textarea
-          value={introduction}
-          onChange={(e) => setIntroduction(e.target.value)}
-          rows="4"
-          className="w-full p-4 border border-gray-300 rounded-lg"
-          placeholder="Enter the introduction here..."
-        />
-      </section>
-      
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Aims</h2>
-        <textarea
-          value={aims}
-          onChange={(e) => setAims(e.target.value)}
-          rows="4"
-          className="w-full p-4 border border-gray-300 rounded-lg"
-          placeholder="Enter the aims here..."
-        />
-      </section>
-
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Philosophy and Pedagogy</h2>
-        <textarea
-          value={philosophy}
-          onChange={(e) => setPhilosophy(e.target.value)}
-          rows="4"
-          className="w-full p-4 border border-gray-300 rounded-lg"
-          placeholder="Enter the philosophy and pedagogy here..."
-        />
-      </section>
-
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Current Offerings</h2>
-        <textarea
-          value={offerings}
-          onChange={(e) => setOfferings(e.target.value)}
-          rows="4"
-          className="w-full p-4 border border-gray-300 rounded-lg"
-          placeholder="Enter the current offerings here..."
-        />
-      </section>
+      {Object.keys(data).map((key, index) => (
+        <section key={key} className="mb-12">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4 capitalize">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</h2>
+          <textarea
+            value={data[key]}
+            onChange={(e) => handleChange(key, e.target.value)}
+            rows="4"
+            className="w-full p-4 border border-gray-300 rounded-lg"
+            placeholder={`Enter the ${key} here...`}
+          />
+        </section>
+      ))}
 
       <button
         onClick={handleSave}
