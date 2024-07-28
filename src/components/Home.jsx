@@ -12,7 +12,7 @@ import SponsorsImageForm from './dashBoard/inputForms/SponsorsImageForm';
 import ReviewForm from './dashBoard/inputForms/ReviewForm';
 import ReviewsDisplay from './ReviewsDisplay';
 import HeaderPattern from './HeaderPattern';
-import InternetCollege from './InternetCollege';
+// import InternetCollege from './InternetCollege';
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
