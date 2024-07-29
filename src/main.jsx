@@ -124,6 +124,9 @@ const router = createBrowserRouter([
               { path: "view/notification", element: <ViewNotifications /> },
               { path: 'forms/course1/edit/:courseId', element: <CourseForm1 editMode /> },
               { path: 'forms/course2/edit/:courseId', element: <CourseForm2 editMode /> },
+
+              { path: 'forms/courses/edit/:category/:courseId', element: <CoursesForm editMode /> },
+
               { path: 'forms/testimonials', element: <ReviewForm /> },
               { path: 'view/events', element: <ViewEvent /> },
               { path: 'view/workshops', element: <ViewWorkshops /> },
