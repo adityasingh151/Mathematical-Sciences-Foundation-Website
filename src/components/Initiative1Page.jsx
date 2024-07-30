@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { txtdb } from '../components/databaseConfig/firebaseConfig';
 import Loading from '../components/LoadSaveAnimation/Loading';
@@ -8,6 +8,7 @@ const Initiative1Page = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [expandedSections, setExpandedSections] = useState([]);
 
   const sectionsRef = useRef({});
 
@@ -72,6 +73,14 @@ const Initiative1Page = () => {
     document.getElementById('aims-section').scrollIntoView({ behavior: 'smooth' });
   };
 
+  const toggleExpandSection = useCallback((section) => {
+    setExpandedSections((prevExpandedSections) =>
+      prevExpandedSections.includes(section)
+        ? prevExpandedSections.filter((s) => s !== section)
+        : [...prevExpandedSections, section]
+    );
+  }, []);
+
   if (loading) {
     return <Loading />;
   }
@@ -100,29 +109,34 @@ const Initiative1Page = () => {
     need: 'The Need for an ‘Out of the Box’ Digital and Technology Based Learning Platform'
   };
 
-  const renderContent = (text) => {
+  const renderContent = (text, key) => {
     const lines = text.split('\n');
-    const elements = [];
+    const isExpanded = expandedSections.includes(key);
+    const visibleLines = isExpanded ? lines : lines.slice(0, 5);
 
-    lines.forEach((line, index) => {
+    const elements = visibleLines.map((line, index) => {
       if (line.startsWith('•') || line.startsWith('-')) {
-        elements.push(
-          <li key={index} className="list-disc pl-5">
-            {line.slice(1).trim()}
-          </li>
-        );
+        return <li key={index} className="list-disc pl-5">{line.slice(1).trim()}</li>;
       } else if (line.trim() === '') {
-        elements.push(<br key={index} />);
+        return <br key={index} />;
       } else {
-        elements.push(
-          <p key={index} className="mb-4">
-            {line}
-          </p>
-        );
+        return <p key={index} className="mb-4">{line}</p>;
       }
     });
 
-    return <>{elements}</>;
+    return (
+      <>
+        {elements}
+        {lines.length > 5 && (
+          <button
+            onClick={() => toggleExpandSection(key)}
+            className="text-blue-500 hover:underline"
+          >
+            {isExpanded ? 'Read Less' : 'Read More'}
+          </button>
+        )}
+      </>
+    );
   };
 
   return (
@@ -157,7 +171,7 @@ const Initiative1Page = () => {
                 {sectionNames[key]}
               </h2>
               <div className="text-lg leading-relaxed mb-4 font-serif">
-                {renderContent(data[key])}
+                {renderContent(data[key], key)}
               </div>
             </div>
           </section>
