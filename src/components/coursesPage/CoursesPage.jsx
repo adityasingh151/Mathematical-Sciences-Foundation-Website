@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { getDatabase, ref, get } from 'firebase/database';
 
-const CourseCard = ({ title, description, imgSrc, link }) => (
+// Memoized CourseCard to prevent unnecessary re-renders
+const CourseCard = React.memo(({ title, description, imgSrc, link }) => (
   <div className="w-full md:w-1/3 px-4 mb-8">
     <div className="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-white">
-      <img src={imgSrc} className="w-full h-48 object-cover" alt="Course Thumbnail" />
+      <img src={imgSrc} className="w-full h-48 object-cover" alt="Course Thumbnail" loading="lazy" />
       <div className="p-6">
         <h3 className="text-xl font-semibold mb-2 text-blue-800">{title}</h3>
         <p className="text-base text-gray-700 mb-4 h-40 overflow-hidden">{description}</p>
@@ -12,7 +13,7 @@ const CourseCard = ({ title, description, imgSrc, link }) => (
       </div>
     </div>
   </div>
-);
+));
 
 const CoursesPage = () => {
   const [coursesForStudents, setCoursesForStudents] = useState([]);
@@ -21,28 +22,30 @@ const CoursesPage = () => {
   const [teachingMethods, setTeachingMethods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchCoursesData = async () => {
-      const db = getDatabase();
-      try {
-        const studentsSnapshot = await get(ref(db, 'courses/students'));
-        const teachersSnapshot = await get(ref(db, 'courses/teachers'));
-        const collegeSnapshot = await get(ref(db, 'courses/college'));
-        const methodsSnapshot = await get(ref(db, 'courses/methods'));
+  const fetchCoursesData = useCallback(async () => {
+    const db = getDatabase();
+    try {
+      const [studentsSnapshot, teachersSnapshot, collegeSnapshot, methodsSnapshot] = await Promise.all([
+        get(ref(db, 'courses/students')),
+        get(ref(db, 'courses/teachers')),
+        get(ref(db, 'courses/college')),
+        get(ref(db, 'courses/methods'))
+      ]);
 
-        setCoursesForStudents(studentsSnapshot.exists() ? Object.values(studentsSnapshot.val()) : []);
-        setCoursesForTeachers(teachersSnapshot.exists() ? Object.values(teachersSnapshot.val()) : []);
-        setCoursesForCollegeStudents(collegeSnapshot.exists() ? Object.values(collegeSnapshot.val()) : []);
-        setTeachingMethods(methodsSnapshot.exists() ? Object.values(methodsSnapshot.val()) : []);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCoursesData();
+      setCoursesForStudents(studentsSnapshot.exists() ? Object.values(studentsSnapshot.val()) : []);
+      setCoursesForTeachers(teachersSnapshot.exists() ? Object.values(teachersSnapshot.val()) : []);
+      setCoursesForCollegeStudents(collegeSnapshot.exists() ? Object.values(collegeSnapshot.val()) : []);
+      setTeachingMethods(methodsSnapshot.exists() ? Object.values(methodsSnapshot.val()) : []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchCoursesData();
+  }, [fetchCoursesData]);
 
   if (isLoading) {
     return <div className="text-center py-20">Loading...</div>;

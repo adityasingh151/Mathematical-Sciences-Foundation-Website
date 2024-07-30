@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue } from "firebase/database";
+import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
 import Loading from './LoadSaveAnimation/Loading';
@@ -15,16 +16,44 @@ const DisplayContent = () => {
 
   useEffect(() => {
     const db = getDatabase();
+    const storage = getStorage();
     
     // Fetch Content
-    const fetchContent = (path, stateKey) => {
+    const fetchContent = async (path, stateKey) => {
       const contentRef = ref(db, path);
-      onValue(contentRef, (snapshot) => {
+      onValue(contentRef, async (snapshot) => {
         const data = snapshot.val();
-        setContent(prev => ({
-          ...prev,
-          [stateKey]: Object.keys(data || {}).map(key => ({ id: key, ...data[key] })).reverse()
-        }));
+        if (data) {
+          let loadedContent;
+          if (stateKey === 'galleryImages') {
+            loadedContent = await Promise.all(Object.keys(data || {}).map(async key => {
+              const item = data[key];
+              try {
+                const imageRef = storageRef(storage, item.imageUrl);
+                const url = await getDownloadURL(imageRef);
+                return { id: key, ...item, imageUrl: url };
+              } catch (err) {
+                console.error('Failed to get download URL', err);
+                return null; // Handle image loading error
+              }
+            }));
+            loadedContent = loadedContent.filter(item => item !== null); // Filter out any failed URLs
+          } else if (stateKey === 'videos') {
+            loadedContent = Object.keys(data || {}).map(key => ({ id: key, ...data[key] })).reverse();
+          } else {
+            loadedContent = Object.keys(data || {}).map(key => ({ id: key, ...data[key] })).reverse();
+          }
+          setContent(prev => ({
+            ...prev,
+            [stateKey]: loadedContent
+          }));
+        } else {
+          setContent(prev => ({
+            ...prev,
+            [stateKey]: []
+          }));
+        }
+        setIsLoading(false);
       });
     };
 
@@ -32,7 +61,9 @@ const DisplayContent = () => {
     fetchContent('videoContent', 'videos');
     fetchContent('articleContent', 'articles');
     
-    setIsLoading(false);
+    return () => {
+      // Cleanup if needed (not shown in this example)
+    };
   }, []);
 
   useEffect(() => {
@@ -50,6 +81,7 @@ const DisplayContent = () => {
     thumbnail: image.imageUrl,
     description: image.imageDetails,
     originalClass: "rounded-lg shadow-lg",
+    loading: "lazy", // Implement lazy loading for images
   });
 
   const renderVideo = (video, index) => (
