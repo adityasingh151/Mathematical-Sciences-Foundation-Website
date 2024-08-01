@@ -88,7 +88,7 @@ const WorkshopPage = () => {
             ref={(el) => (sectionRefs.current.header = el)}
             title={workshopData.headerTitle}
             subtitle={workshopData.headerSubtitle}
-            // buttonText="Register Now"
+            buttonText="Register Now"
             onButtonClick={handleButtonClick}
             data-animation="animate-slide-in"
           />
@@ -129,7 +129,7 @@ const WorkshopPage = () => {
               { label: 'Fees(Rupees)', value: workshopData.workshopRegistrationFee },
             ]}
             registrationInfo={workshopData.registrationInfo}
-            // buttonText="Register Now"
+            buttonText="Register Now"
             onButtonClick={handleButtonClick}
             data-animation="animate-slide-up"
           />

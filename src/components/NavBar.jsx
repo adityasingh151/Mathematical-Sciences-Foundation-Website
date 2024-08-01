@@ -107,7 +107,7 @@ const Navbar = () => {
       <div className="mx-auto px-3 py-1 md:flex md:items-center md:justify-between">
         <div className="flex items-center justify-between relative">
           <Link to="/" className="relative z-10" onClick={() => setIsOpen(false)}>
-            <img src="/msflogo.png" alt="Logo" className="sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 h-12 w-12 sm:-mb-12" />
+            <img src="/msflogo.png" alt="Logo" className="sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-28 sm:-mb-12" />
           </Link>
           <div className="md:hidden">
             <button
@@ -195,7 +195,7 @@ const Navbar = () => {
             ))}
           </div>
           <div className="flex flex-col items-center mt-4 md:flex-row md:ml-4 md:space-x-4 space-y-2 md:space-y-0">
-            <a href="https://www.facebook.com/yourpage" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
+            <a href="https://www.facebook.com/MathSciFound" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
               <FaFacebook />
             </a>
             <a href="https://www.twitter.com/yourprofile" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
@@ -204,7 +204,7 @@ const Navbar = () => {
             <a href="https://www.instagram.com/yourprofile" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
               <FaInstagram />
             </a>
-            <a href="https://www.linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
+            <a href="https://www.linkedin.com/company/mathematical-sciences-foundation/people/" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
               <FaLinkedin />
             </a>
           </div>

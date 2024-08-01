@@ -8,6 +8,7 @@ const People = React.memo(() => {
     const [sections, setSections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
 
     // Fetch data from Firebase
     const fetchData = useCallback(() => {
