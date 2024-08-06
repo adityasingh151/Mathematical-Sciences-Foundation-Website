@@ -31,7 +31,6 @@ const Initiative1Page = () => {
           fetchedData[section] = value || '';
           fetchedCount++;
 
-          // When all sections have been fetched, update the state
           if (fetchedCount === sections.length) {
             setData(fetchedData);
             setLoading(false);
@@ -55,7 +54,7 @@ const Initiative1Page = () => {
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.1 }
     );
 
     Object.values(sectionsRef.current).forEach((section) => {
@@ -141,7 +140,7 @@ const Initiative1Page = () => {
 
   return (
     <div className="font-lato text-gray-900 bg-gradient-to-r from-cyan-50 to-blue-100 min-h-screen">
-      <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-screen relative">
+      <div className="bg-gradient-to-r from-teal-600 to-blue-700 h-screen relative">
         <div className="flex items-center justify-center h-full bg-black bg-opacity-50">
           <div className="text-center text-white">
             <h1 className="text-6xl font-bold mb-4">Welcome to The Internet College</h1>
@@ -156,7 +155,7 @@ const Initiative1Page = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 lg:px-8 py-16 bg-gradient-to-b from-sky-100 to-white">
+      <div className="container mx-auto px-6 lg:px-8 py-4 bg-gradient-to-b from-sky-100 to-white">
         <h1 className="text-5xl font-extrabold text-center text-indigo-900 mb-12 tracking-wide">The Internet College</h1>
 
         {Object.keys(data).map((key, index) => (
@@ -164,7 +163,7 @@ const Initiative1Page = () => {
             key={key}
             ref={(el) => (sectionsRef.current[key] = el)}
             data-animation={`animate-${index % 2 === 0 ? 'slide-in' : 'fly-in'}`}
-            className="py-20 bg-gradient-to-r from-cyan-50 to-blue-100 mb-12"
+            className="py-4 bg-gradient-to-r from-cyan-50 to-blue-100 mb-12"
           >
             <div className="container mx-auto px-8">
               <h2 className="text-3xl font-bold mb-4 text-center capitalize">

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Carousel from './Carousel';
-import AboutSection from './AboutSection';
 import SponsorsSection from './SponsorsSection'; // Fixed typo in the name
 import WorksSection from './WorksSection';
 import ContactArea from './ContactArea';
@@ -36,12 +35,9 @@ function Home() {
     <>
     <HeaderPattern/>
       <Carousel />
-      {/* <AboutSection />
-      <SponsorsSection /> */}
       <WorksSection />
       <BeautifulButton/>
       <ReviewsDisplay/>
-      {/* <InternetCollege/> */}
     </>
   );
 }
