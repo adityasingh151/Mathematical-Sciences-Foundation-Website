@@ -56,7 +56,7 @@ const Carousel = () => {
   }
 
   return (
-    <div className="mx-auto py-8 rounded-md bg-gradient-to-r from-teal-600 to-blue-700 shadow-lg">
+    <div className="mx-auto py-8 bg-gradient-to-r from-teal-600 to-blue-700 shadow-lg">
       {/* <h2 className="text-4xl font-bold text-center text-white mb-8">
         Discover Our Stunning Collection
       </h2> */}

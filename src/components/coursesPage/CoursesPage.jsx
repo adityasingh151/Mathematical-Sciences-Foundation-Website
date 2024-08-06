@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { getDatabase, ref, get } from 'firebase/database';
+import Loading from '../LoadSaveAnimation/Loading';
 
 // Memoized CourseCard to prevent unnecessary re-renders
 const CourseCard = React.memo(({ title, description, imgSrc, link }) => (
@@ -48,7 +49,7 @@ const CoursesPage = () => {
   }, [fetchCoursesData]);
 
   if (isLoading) {
-    return <div className="text-center py-20">Loading...</div>;
+    return <Loading/>;
   }
 
   return (
