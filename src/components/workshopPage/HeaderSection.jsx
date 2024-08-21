@@ -10,8 +10,7 @@ const HeaderSection = React.forwardRef(
     return (
       <div
         ref={ref}
-        data-animation="animate-slide-in"
-        className="relative w-full bg-cover bg-center animate-fly-in bg-gradient-to-r from-teal-900 to-blue-950 h-screen"
+        className="relative w-full bg-cover bg-center bg-gradient-to-r from-teal-900 to-blue-950 h-screen"
       >
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-8 ">
           {/* Conditional rendering of the title, subtitle, and button */}
