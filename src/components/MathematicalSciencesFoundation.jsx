@@ -29,7 +29,7 @@ const MathematicalSciencesFoundation = () => {
         <div className="text-center text-white">
             <h1 className="text-6xl font-bold mb-4">Mathematical Sciences Foundation</h1>
           <p className="text-blue-100 text-2xl font-bold mb-4 animate-pulse">
-            A initiative by Prof. Dinesh Singh
+            An initiative by Prof. Dinesh Singh
           </p>
           <button
               className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full"
