@@ -147,17 +147,10 @@ const DisplayContent = () => {
               )}
               {videos.length > 0 && (
                 <section className="my-12">
-<<<<<<< Updated upstream
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-indigo-900 mb-4 sm:mb-6 md:mb-8 border-b-4 pb-2 sm:pb-3 md:pb-4 border-indigo-900">
-  {category} - Videos
-</h2>
-               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-8">
-=======
                   <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-indigo-900 mb-2 xs:mb-3 sm:mb-4 md:mb-6 lg:mb-8 border-b-2 xs:border-b-3 sm:border-b-4 pb-1 xs:pb-2 sm:pb-3 md:pb-4 border-indigo-900">
                     {category} - Videos
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-8">
->>>>>>> Stashed changes
                     {videos.map(renderVideo)}
                   </div>
                 </section>
