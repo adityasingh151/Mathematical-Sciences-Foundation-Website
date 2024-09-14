@@ -77,7 +77,11 @@ const EngineeringKitchenPage = () => {
         <section className="py-4 bg-gradient-to-r from-cyan-50 to-blue-100 mb-12">
           <div className="container mx-auto px-8">
             <h2 className="text-3xl font-bold mb-4 text-center capitalize">Our Vision and Purpose</h2>
+<<<<<<< Updated upstream
             <div className="text-lg leading-relaxed mb-4 font-serif"
+=======
+            <div className="text-lg leading-relaxed mb-4 font-serif ql-editor"
+>>>>>>> Stashed changes
                  dangerouslySetInnerHTML={{ __html: sanitizedPurpose }} />
           </div>
         </section>
@@ -85,7 +89,11 @@ const EngineeringKitchenPage = () => {
         <section className="py-4 bg-gradient-to-r from-cyan-50 to-blue-100 mb-12">
           <div className="container mx-auto px-8">
             <h2 className="text-3xl font-bold mb-4 text-center capitalize">About Engineering Kitchen</h2>
+<<<<<<< Updated upstream
             <div className="text-lg leading-relaxed mb-4 font-serif"
+=======
+            <div className="text-lg leading-relaxed mb-4 font-serif ql-editor"
+>>>>>>> Stashed changes
                  dangerouslySetInnerHTML={{ __html: sanitizedAbout }} />
           </div>
         </section>

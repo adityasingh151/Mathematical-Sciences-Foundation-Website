@@ -9,7 +9,11 @@ const QuoteSection = React.forwardRef(({ quote }, ref) => {
       <div className="container mx-auto text-center">
         {quote && (
           <blockquote
+<<<<<<< Updated upstream
             className="text-4xl italic font-semibold"
+=======
+            className="text-4xl italic font-semibold ql-editor"
+>>>>>>> Stashed changes
             dangerouslySetInnerHTML={{ __html: sanitizedQuote }}
           />
         )}

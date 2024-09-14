@@ -14,7 +14,11 @@ const RegistrationSection = React.forwardRef(({ title, details, registrationInfo
         <div className="max-w-screen-md mx-auto bg-white p-10 border border-gray-300 rounded-lg shadow-xl">
           {title && (
             <h2
+<<<<<<< Updated upstream
               className="text-4xl font-bold text-center text-blue-600 mb-8"
+=======
+              className="text-4xl font-bold text-center text-blue-600 mb-8 ql-editor"
+>>>>>>> Stashed changes
               dangerouslySetInnerHTML={{ __html: sanitizedTitle }}
             />
           )}

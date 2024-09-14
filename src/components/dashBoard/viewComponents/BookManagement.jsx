@@ -61,6 +61,7 @@ const BookManagement = () => {
           <div key={book.id} className="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between">
             <div>
               <h2 className="text-2xl font-semibold mb-2 text-gray-800">
+<<<<<<< Updated upstream
                 <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(book.title) }} />
               </h2>
               <p className="text-gray-600">
@@ -68,6 +69,18 @@ const BookManagement = () => {
               </p>
               <p className="text-gray-600">
                 <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(book.publisher) }} />
+=======
+                <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(book.title) }} 
+                className='ql-editor'/>
+              </h2>
+              <p className="text-gray-600">
+                <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(book.author) }} 
+                className='ql-editor'/>
+              </p>
+              <p className="text-gray-600">
+                <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(book.publisher) }} 
+                className='ql-editor'/>
+>>>>>>> Stashed changes
               </p>
             </div>
             <div className="mt-4 flex justify-end space-x-2">
@@ -93,7 +106,12 @@ const BookManagement = () => {
         title="Confirm Deletion"
         onClose={() => setShowModal(false)}
       >
+<<<<<<< Updated upstream
         <p dangerouslySetInnerHTML={{ __html: modalContent }} />
+=======
+        <p dangerouslySetInnerHTML={{ __html: modalContent }} 
+        className='ql-editor'/>
+>>>>>>> Stashed changes
         <div className="mt-4 flex justify-end space-x-2">
           <button
             onClick={handleDelete}

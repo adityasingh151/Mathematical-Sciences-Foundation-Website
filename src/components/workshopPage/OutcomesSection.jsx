@@ -11,7 +11,11 @@ const OutcomesSection = React.forwardRef(({ title, content }, ref) => {
           {title && <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">{title}</h2>}
           {content && (
             <p
+<<<<<<< Updated upstream
               className="text-lg leading-relaxed text-gray-700"
+=======
+              className="text-lg leading-relaxed text-gray-700 ql-editor"
+>>>>>>> Stashed changes
               dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             />
           )}

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaFacebook, FaLinkedin } from "react-icons/fa";
+import DOMPurify from 'dompurify';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [workshops, setWorkshops] = useState([]);
   const [events, setEvents] = useState([]);
+  const [resources, setResources] = useState([]); // State to store resources
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -47,6 +49,29 @@ const Navbar = () => {
       }
     });
   }, []);
+
+  // Fetch resources from the database
+  useEffect(() => {
+    const db = getDatabase();
+    const resourcesRef = ref(db, "resources");
+
+    onValue(resourcesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const resourceList = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setResources(resourceList.reverse()); // Store the resources
+      } else {
+        console.log("No data available");
+      }
+    });
+  }, []);
+
+  const sanitizeContent = (content) => {
+    return { __html: DOMPurify.sanitize(content) };
+  };
 
   const navItems = [
     {
@@ -96,6 +121,15 @@ const Navbar = () => {
         path: `/event/${event.id}`,
       })),
     },
+    {
+      name: "Resources",
+      path: `/resources`,
+      dropdown: resources.map((resource) => ({
+        name: resource.title,
+        path: `/resources/${resource.id}`, // Link to the specific resource
+      })),
+    },
+
     {
       name: "Gallery",
       path: "/gallery",
@@ -153,9 +187,8 @@ const Navbar = () => {
                 </NavLink>
                 {item.dropdown && (
                   <div
-                    className={`${
-                      isOpen ? "block" : "hidden"
-                    } lg:absolute lg:group-hover:block bg-gray-800 shadow-md rounded-md mt-0 z-50 lg:w-fit transition-all ease-in-out duration-300`}
+                    className={`${isOpen ? "block" : "hidden"
+                      } lg:absolute lg:group-hover:block bg-gray-800 shadow-md rounded-md mt-0 z-50 lg:w-fit transition-all ease-in-out duration-300`}
                   >
                     {item.dropdown.map((subItem, subIndex) => (
                       <div key={subIndex} className="relative group">
@@ -168,26 +201,8 @@ const Navbar = () => {
                           }
                           onClick={() => setIsOpen(false)} // Close the navbar on click
                         >
-                          {subItem.name}
+                          <span dangerouslySetInnerHTML={sanitizeContent(subItem.name)} />
                         </NavLink>
-                        {subItem.subDropdown && (
-                          <div className="absolute left-full top-0 w-fit hidden group-hover:block bg-gray-800 shadow-md rounded-md mt-0 z-50">
-                            {subItem.subDropdown.map((nestedItem, nestedIndex) => (
-                              <NavLink
-                                key={nestedIndex}
-                                to={nestedItem.path}
-                                className={({ isActive }) =>
-                                  isActive
-                                    ? "block px-4 py-2 text-blue-400 hover:bg-gray-700 text-center rounded-md"
-                                    : "block px-4 py-2 text-gray-200 hover:bg-gray-700 text-center rounded-md"
-                                }
-                                onClick={() => setIsOpen(false)} // Close the navbar on click
-                              >
-                                {nestedItem.name}
-                              </NavLink>
-                            ))}
-                          </div>
-                        )}
                       </div>
                     ))}
                   </div>
@@ -199,12 +214,6 @@ const Navbar = () => {
             <a href="https://www.facebook.com/MathSciFound" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
               <FaFacebook />
             </a>
-            {/* <a href="https://www.twitter.com/yourprofile" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
-              <FaTwitter />
-            </a>
-            <a href="https://www.instagram.com/yourprofile" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
-              <FaInstagram />
-            </a> */}
             <a href="https://www.linkedin.com/company/mathematical-sciences-foundation/people/" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white">
               <FaLinkedin />
             </a>

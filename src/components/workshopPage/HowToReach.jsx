@@ -28,7 +28,11 @@ const HowToReach = React.forwardRef(({ location }, ref) => {
           {location && location.name && (
             <div className="md:w-1/4 p-4">
               <p
+<<<<<<< Updated upstream
                 className="text-lg leading-relaxed"
+=======
+                className="text-lg leading-relaxed ql-editor"
+>>>>>>> Stashed changes
                 dangerouslySetInnerHTML={{ __html: sanitizedLocationName }}
               />
             </div>

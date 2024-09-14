@@ -67,8 +67,14 @@ const Initiative1Page = () => {
     return (
       <>
         <div
+<<<<<<< Updated upstream
           dangerouslySetInnerHTML={{ __html: visibleParagraphs.join('</p>') + '</p>' }}
           className="mb-4"
+=======
+        
+          dangerouslySetInnerHTML={{ __html: visibleParagraphs.join('</p>') + '</p>' }}
+          className="mb-4 ql-editor"
+>>>>>>> Stashed changes
         />
         {paragraphs.length > 2 && (
           <button
