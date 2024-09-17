@@ -31,14 +31,19 @@ import Loading from "./components/LoadSaveAnimation/Loading";
 import ResearchDisplay from "./components/ResearchDisplay";
 import LibraryDisplay from "./components/LibraryDisplay";
 import ResourceList from "./components/ResourceList";
+import ActivityList from "./components/ActivityList";
 const AdminLayout = lazy(() =>
   import("./components/AdminLayout"));
 const DashboardCard = lazy(() =>
   import("./components/DashboardCard"));
 const ViewResources = lazy(() =>
   import("./components/dashBoard/viewComponents/ViewResources"));
+const ViewActivity = lazy(() =>
+  import("./components/dashBoard/viewComponents/ViewActivity"));
 const ResourceForm = lazy(() =>
   import("./components/dashBoard/inputForms/ResourceForm"));
+const ActivityForm = lazy(() =>
+  import("./components/dashBoard/inputForms/ActivityForm"));
 const CourseForm1 = lazy(() =>
   import("./components/dashBoard/inputForms/CourseForm1")
 );
@@ -172,6 +177,10 @@ const router = createBrowserRouter([
             element: <ResourceList />,
           },
           {
+            path: "activities", // This route will show all resources
+            element: <ActivityList />,
+          },
+          {
             path: "resources/:resourceId", // This route will show a specific resource based on its ID
             element: <ResourceList />,
           },
@@ -219,6 +228,14 @@ const router = createBrowserRouter([
                 ),
               },
               {
+                path: "view/activities",
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <ViewActivity />
+                  </Suspense>
+                ),
+              },
+              {
                 path: "forms/resource",
                 element: (
                   <Suspense fallback={<Loading />}>
@@ -227,10 +244,26 @@ const router = createBrowserRouter([
                 ),
               },
               {
+                path: "forms/activity",
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <ActivityForm />
+                  </Suspense>
+                ),
+              },
+              {
                 path: "forms/resource/edit/:resourceId",
                 element: (
                   <Suspense fallback={<Loading />}>
                     <ResourceForm />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "forms/activity/edit/:activityId",
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <ActivityForm />
                   </Suspense>
                 ),
               },
